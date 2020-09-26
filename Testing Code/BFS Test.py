@@ -80,12 +80,14 @@ def BFS(pos_ori, pos_dest, game):
     tile_org = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
     queque = []
+    orden = 0
     queque.append(tile_org)
     while tile_org != tile_dest:
         tile_org = queque.pop(0)
-        tile_org.visited_order += 1
+        tile_org.visited_order = orden
+        orden += 1
 
-        for i in tile_org.neighbour:
+        for i in tile_org.neighbours:
             if i.visited == False:
                 queque.append(i)
                 i.visited = True
