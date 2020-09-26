@@ -93,7 +93,6 @@ if __name__== "__main__":
 #BFS -- Cledmir
 
 def BFS(source, destination):
-    visit = [[False for r in range(9)] for c in range(9)]
     queque = []
     aux = ficha 
     r=[]
