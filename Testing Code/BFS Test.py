@@ -156,6 +156,7 @@ def measure_time(sorting_alg, v):
 def main():
     pygame.init()
     done = False
+<<<<<<< Updated upstream
 <<<<<<< HEAD
     SCREEN_WIDTH = 900
     SCREEN_HEIGHT = 900
@@ -171,6 +172,9 @@ def main():
     BFS(pos_ori, pos_dest,game)
 =======
     n = 11
+=======
+    n = 5
+>>>>>>> Stashed changes
     numPlayer = 4
     SCREEN_WIDTH = int((n)*100)
     SCREEN_HEIGHT = int((n)*100)
