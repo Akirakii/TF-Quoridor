@@ -75,12 +75,34 @@ def call_DFS(game, pos_ori, pos_dest):
     game.game_board.print_visited_tiles(board_util)
     game.game_board.set_all_visited_false(board_util)
 
+#BFS
+def BFS(game, pos_ori, pos_dest):
+    board_util = game.game_board.board
+    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_dest = board_util[pos_dest[0]][pos_dest[1]]
+    queque = []
+    orden = 0
+    queque.append(tile_org)
+    while tile_org != tile_dest:
+        
+        tile_org = queque.pop(0)
+        tile_org.visited_order = orden
+        orden += 1
+        
+
+        for i in tile_org.neighbours:
+            if i.visited == False:
+                queque.append(i)
+                i.visited = True
+    game.game_board.print_visited_tiles(board_util)
+    game.game_board.set_all_visited_false(board_util)
+
 
 def main():
     game = Game()
     pos_ori = [1,1]
     pos_dest = [3,3]
-    call_DFS(game, pos_ori, pos_dest)
+    BFS(game, pos_ori, pos_dest)
 
 
 if __name__== "__main__":
@@ -91,19 +113,6 @@ if __name__== "__main__":
 
 
 #BFS -- Cledmir
-
-def BFS(source, destination):
-    queque = []
-    aux = ficha 
-    r=[]
-    queque.append(ficha)
-    while aux != destination:
-        aux = queque.pop(0)
-
-        for i in aux.neighbour:
-            if visit[i.elemento.xpos][i.elemento.ypos] == False:
-                queque.append(i)
-
 
 
 
