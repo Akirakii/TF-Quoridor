@@ -1,4 +1,5 @@
 import math
+import pygame
 # import networkx as nx
 
 class Tile():
@@ -96,11 +97,36 @@ def BFS(pos_ori, pos_dest, game):
 
 
 def main():
+    pygame.init()
+    done = False
+    SCREEN_WIDTH = 900
+    SCREEN_HEIGHT = 900
+    BLACK = (0,0,0)
+    WHITE = (255,255,255)
+    GREEN = (0,255,0)
+    RED = (255,0,0)
+    BLUE = (0,0,255)
+    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     game = Game()
     pos_ori = [1,1]
     pos_dest = [3,3]
-    #call_DFS(game, pos_ori, pos_dest)
     BFS(pos_ori, pos_dest,game)
+
+    while not done:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+        screen.fill([255, 255, 255])
+        for x in range(100,900,100):
+            pygame.draw.line(screen,BLACK, (x,0),(x,900), 2)
+        for y in range(100,900,100):
+            pygame.draw.line(screen,BLACK, (0,y),(900,y), 2)
+        pygame.display.flip()
+
+    pygame.quit()
+
 
 
 if __name__== "__main__":
