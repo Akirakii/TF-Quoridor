@@ -1,11 +1,13 @@
 import math
-# import networkx as nx
+import pygame
+import time
 
 class Tile():
     def __init__(self):
         self.neighbours = []
         self.visited = False
         self.visited_order = -1
+        self.is_shortest_path = False
         element = None
 
 class Board():
@@ -31,21 +33,32 @@ class Board():
                 v = board[i][j].visited_order
                 print(v, end = ",  " if v in range(0,9) else ", ")
             print("\n")
+    
+    def print_path(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                print(1 if board[i][j].is_shortest_path else 0, end = ",  ")
+            print("\n")
 
-    def set_all_visited_false(self, board):
+    def reset_tiles(self, board):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 board[i][j].visited = False
                 board[i][j].visited_order = -1
+                board[i][j].is_shortest_path = False
 
-class Player():
+class Player(pygame.sprite.Sprite):
     def __init__(self, color, xpos, ypos):
         self.color = color
         self.xpos = xpos
         self.ypos = ypos
+        super().__init__()
+        self.image = pygame.image.load("meteor.png").convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
 
 class Game():
-    def __init__(self, num_players=4, size=9):
+    def __init__(self, num_players, size):
         self.players = []
         colors = ['red', 'blue', 'yellow', 'green']
         xpos = [int(size/2), int(size/2), 0, size-1]
@@ -55,8 +68,14 @@ class Game():
         for i in range(num_players):
             self.players.append(Player(colors[i], xpos[i], ypos[i]))
             self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
- 
- #DFS
+        self.all_sprite_list = pygame.sprite.Group()
+    def printPlayer(self):
+        for i in range(len(self.players)):
+            self.players[i].rect.x = (self.players[i].xpos)*50
+            self.players[i].rect.y = (self.players[i].ypos)*50
+            self.all_sprite_list.add(self.players[i])
+
+#DFS
 def DFS(tile_ori, tile_dest, visited_order):
     tile_ori.visited = True
     tile_ori.visited_order = visited_order
@@ -66,90 +85,126 @@ def DFS(tile_ori, tile_dest, visited_order):
         if i.visited == False: 
             DFS(i, tile_dest, visited_order+1)
 
+def find_shortest_path(tile):
+    tile.is_shortest_path = True
+    if tile.visited_order == 0:
+        return tile
+    
+    posible_targets = []
+    
+    minimum = min(i.visited_order for i in tile.neighbours if i.visited)
+    for i in tile.neighbours:
+        if i.visited_order == minimum:
+            posible_targets.append(i) 
+
+    if len(posible_targets) == 1:
+        neighbor_target = posible_targets[0]
+    else:
+        neighbors_minimum = []
+        for i in posible_targets:
+            neighbor_minimum = min(i.visited_order for i in tile.neighbours if i.visited)
+            neighbors_minimum.append(neighbor_minimum)
+
+        minimum = min(i for i in neighbors_minimum)
+        for i in tile.neighbours:
+            if i.visited_order == minimum:
+                neighbor_target = i
+
+    find_shortest_path(neighbor_target)
+
 
 def call_DFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
-    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_ori = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
-    DFS(tile_org, tile_dest, 0)
+    DFS(tile_ori, tile_dest, 0)
+    find_shortest_path(tile_dest)
     game.game_board.print_visited_tiles(board_util)
-    game.game_board.set_all_visited_false(board_util)
+    game.game_board.print_path(board_util)
+    game.game_board.reset_tiles(board_util)
 
-#BFS
+
 def BFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
-    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_ori = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
     queque = []
-    orden = 0
-    queque.append(tile_org)
-    while tile_org != tile_dest:
-        
-        tile_org = queque.pop(0)
-        tile_org.visited_order = orden
-        orden += 1
-        
+    order = 0
+    queque.append(tile_ori)
 
-        for i in tile_org.neighbours:
-            if i.visited == False:
+    tile_ori.visited = True
+    while True:
+        tile_ori = queque.pop(0)
+        tile_ori.visited = True
+        tile_ori.visited_order = order
+        order += 1
+        if tile_ori == tile_dest:
+            break
+        for i in tile_ori.neighbours:
+            if queque.count(i) == 0 and i.visited == False:
                 queque.append(i)
-                i.visited = True
+    
+    find_shortest_path(tile_dest)
     game.game_board.print_visited_tiles(board_util)
-    game.game_board.set_all_visited_false(board_util)
+    game.game_board.print_path(board_util)
+    game.game_board.reset_tiles(board_util)
 
+
+def measure_time(sorting_alg, v):
+  start = time.time()
+  n = len(v)
+  sorting_alg(v)
+  end = time.time()
+  return end-start
 
 def main():
-    game = Game()
+    pygame.init()
+    done = False
+    n = 9
+    numPlayer = 4
+    SCREEN_WIDTH = int((n)*50)
+    SCREEN_HEIGHT = int((n)*50)
+    BLACK = (0,0,0)
+    all_sprite_list = pygame.sprite.Group()
+    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+    game = Game(numPlayer, n)
     pos_ori = [1,1]
     pos_dest = [3,3]
-    call_DFS(game, pos_ori, pos_dest)
+    start = time.time()
     BFS(game, pos_ori, pos_dest)
+    end = time.time()
+    print(end-start)
+
+    #start = time.time()
+    #call_DFS(game, pos_ori, pos_dest)
+    #end = time.time()
+    #print(end-start)
+
+    while not done:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+        screen.fill([255, 255, 255])
+        for x in range(50,SCREEN_WIDTH,50):
+            pygame.draw.line(screen,BLACK, (x,0),(x,SCREEN_WIDTH), 2)
+        for y in range(50,SCREEN_HEIGHT,50):
+            pygame.draw.line(screen,BLACK, (0,y),(SCREEN_HEIGHT,y), 2)
+
+        game.printPlayer()
+        game.all_sprite_list.draw(screen)
+        pygame.display.flip()
+
+    pygame.quit()
+
 
 
 if __name__== "__main__":
     main()
-
-#DFS -- Akira
-
-
-
-#BFS -- Cledmir
-
-# def BFS(source, destination):
-#     queque = []
-#     aux = ficha 
-#     r=[]
-#     queque.append(ficha)
-#     while aux != destination:
-#         aux = queque.pop(0)
-
-#         for i in aux.neighbour:
-#             if visit[i.elemento.xpos][i.elemento.ypos] == False:
-#                 queque.append(i)
+game = Game()
+pos_ori = [1,1]
+pos_dest = [3,3]
+call_DFS(game, pos_ori, pos_dest)
 
 
-
-
-#Backtracking -- Diego
-
-
-
-
-
-
-# def main():
-#     game = Game()
-#     size = 9
-#     raiz = Tk()
-#     raiz.title("Quaridor")
-#     raiz.geometry("500x500")
-#     miFrame = Frame()
-#     miFrame.config(bg="grey")
-#     miFrame.config(bd=35)
-#     miFrame.config(relief="groove")
-#     raiz.mainloop()
-
-
-# if __name__== '__main__':
-#   main()
-        

@@ -68,6 +68,7 @@ class Game():
             self.players[i].rect.y = (self.players[i].ypos)*50
             self.all_sprite_list.add(self.players[i])
  
+ 
  #DFS
 def DFS(tile_ori, tile_dest, visited_order):
     tile_ori.visited = True
@@ -81,31 +82,32 @@ def DFS(tile_ori, tile_dest, visited_order):
 
 def call_DFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
-    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_ori = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
-    DFS(tile_org, tile_dest, 0)
+    DFS(tile_ori, tile_dest, 0)
     game.game_board.print_visited_tiles(board_util)
     game.game_board.set_all_visited_false(board_util)
 
 def BFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
-    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_ori = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
     queque = []
     orden = 0
-    queque.append(tile_org)
-    while tile_org != tile_dest:
-        
-        tile_org = queque.pop(0)
-        tile_org.visited_order = orden
+    queque.append(tile_ori)
+    while True:
+        tile_ori = queque.pop(0)
+        tile_ori.visited = True
+        tile_ori.visited_order = orden
         orden += 1
-        tile_org.visited = True
-        for i in tile_org.neighbours:
-            if i.visited == False:
+        if tile_ori == tile_dest:
+            break
+        for i in tile_ori.neighbours:
+            if queque.count(i) == 0 and i.visited == False:
                 queque.append(i)
-                i.visited = True
-    
-    
+            # if i.visited == False:
+            #     queque.append(i)
+
     game.game_board.print_visited_tiles(board_util)
     game.game_board.set_all_visited_false(board_util)
 

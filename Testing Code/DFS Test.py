@@ -74,18 +74,6 @@ def DFS(tile_ori, tile_dest, visited_order):
         if i.visited == False: 
             DFS(i, tile_dest, visited_order+1)
 
-# def get_neighbour_target(tile):
-#     if tile.visited_order == 0:
-#         return tile
-#     minv = 1000000
-#     neighbor_target = tile
-#     for i in tile.neighbours:
-#         if i == neighbor_target:
-#             return get_neighbour_target(i)
-#         elif i.visited and i.visited_order < minv:
-#             minv = i.visited_order
-#             neighbour_target = i
-
 def find_shortest_path(tile):
     tile.is_shortest_path = True
     if tile.visited_order == 0:
