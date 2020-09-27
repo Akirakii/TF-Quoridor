@@ -39,11 +39,15 @@ class Board():
                 board[i][j].visited = False
                 board[i][j].visited_order = -1
 
-class Player():
+class Player(pygame.sprite.Sprite):
     def __init__(self, color, xpos, ypos):
         self.color = color
         self.xpos = xpos
         self.ypos = ypos
+        super().__init__()
+        self.image = pygame.image.load("meteor.png").convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
 
 class Game():
     def __init__(self, num_players=4, size=9):
@@ -56,6 +60,12 @@ class Game():
         for i in range(num_players):
             self.players.append(Player(colors[i], xpos[i], ypos[i]))
             self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
+        self.all_sprite_list = pygame.sprite.Group()
+    def printPlayer(self):
+        for i in range(len(self.players)):
+            self.players[i].rect.x = (self.players[i].xpos)*100
+            self.players[i].rect.y = (self.players[i].ypos)*100
+            self.all_sprite_list.add(self.players[i])
  
  #DFS
 def DFS(tile_ori, tile_dest, visited_order):
@@ -106,11 +116,16 @@ def main():
     GREEN = (0,255,0)
     RED = (255,0,0)
     BLUE = (0,0,255)
+    all_sprite_list = pygame.sprite.Group()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     game = Game()
     pos_ori = [1,1]
     pos_dest = [3,3]
     BFS(pos_ori, pos_dest,game)
+
+    for i in range(4):
+
+        all_sprite_list.add()
 
     while not done:
 
@@ -123,7 +138,12 @@ def main():
             pygame.draw.line(screen,BLACK, (x,0),(x,900), 2)
         for y in range(100,900,100):
             pygame.draw.line(screen,BLACK, (0,y),(900,y), 2)
+
+        game.printPlayer()
+        game.all_sprite_list.draw(screen)
         pygame.display.flip()
+
+        
 
     pygame.quit()
 
