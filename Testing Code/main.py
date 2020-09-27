@@ -12,7 +12,7 @@ class Tile():
 
 class Board():
     def __init__(self, size):
-        self.board = [[Tile() for r in range(9)] for c in range(9)]
+        self.board = [[Tile() for r in range(size)] for c in range(size)]
         self.indexing_tiles(self.board)
 
     def indexing_tiles(self, board):
@@ -160,7 +160,7 @@ def measure_time(sorting_alg, v):
 def main():
     pygame.init()
     done = False
-    n = 9
+    n = 99
     numPlayer = 4
     SCREEN_WIDTH = int((n)*50)
     SCREEN_HEIGHT = int((n)*50)
@@ -202,9 +202,5 @@ def main():
 
 if __name__== "__main__":
     main()
-game = Game()
-pos_ori = [1,1]
-pos_dest = [3,3]
-call_DFS(game, pos_ori, pos_dest)
 
 
