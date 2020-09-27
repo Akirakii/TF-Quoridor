@@ -6,7 +6,10 @@ class Tile():
         self.neighbours = []
         self.visited = False
         self.visited_order = -1
+<<<<<<< HEAD
         self.is_shortest_path = False
+=======
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
         element = None
 
 class Board():
@@ -56,8 +59,13 @@ class Game():
         for i in range(num_players):
             self.players.append(Player(colors[i], xpos[i], ypos[i]))
             self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
+<<<<<<< HEAD
 
 #DFS
+=======
+ 
+ #DFS
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 def DFS(tile_ori, tile_dest, visited_order):
     tile_ori.visited = True
     tile_ori.visited_order = visited_order
@@ -67,6 +75,7 @@ def DFS(tile_ori, tile_dest, visited_order):
         if i.visited == False: 
             DFS(i, tile_dest, visited_order+1)
 
+<<<<<<< HEAD
 def find_shortest_path(tile):
     tile.is_shortest_path = True
     minv = 1000000
@@ -76,16 +85,25 @@ def find_shortest_path(tile):
             neighbor_target = i
     find_shortest_path(i)
 
+=======
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 def call_DFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
     tile_org = board_util[pos_ori[0]][pos_ori[1]]
     tile_dest = board_util[pos_dest[0]][pos_dest[1]]
     DFS(tile_org, tile_dest, 0)
     game.game_board.print_visited_tiles(board_util)
+<<<<<<< HEAD
     find_shortest_path(tile_dest)
     game.game_board.set_all_visited_false(board_util)
 
 
+=======
+    game.game_board.set_all_visited_false(board_util)
+
+
+
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 game = Game()
 pos_ori = [1,1]
 pos_dest = [3,3]

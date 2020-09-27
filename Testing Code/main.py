@@ -75,12 +75,41 @@ def call_DFS(game, pos_ori, pos_dest):
     game.game_board.print_visited_tiles(board_util)
     game.game_board.set_all_visited_false(board_util)
 
+<<<<<<< HEAD
+=======
+#BFS
+def BFS(game, pos_ori, pos_dest):
+    board_util = game.game_board.board
+    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_dest = board_util[pos_dest[0]][pos_dest[1]]
+    queque = []
+    orden = 0
+    queque.append(tile_org)
+    while tile_org != tile_dest:
+        
+        tile_org = queque.pop(0)
+        tile_org.visited_order = orden
+        orden += 1
+        
+
+        for i in tile_org.neighbours:
+            if i.visited == False:
+                queque.append(i)
+                i.visited = True
+    game.game_board.print_visited_tiles(board_util)
+    game.game_board.set_all_visited_false(board_util)
+
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 
 def main():
     game = Game()
     pos_ori = [1,1]
     pos_dest = [3,3]
+<<<<<<< HEAD
     call_DFS(game, pos_ori, pos_dest)
+=======
+    BFS(game, pos_ori, pos_dest)
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 
 
 if __name__== "__main__":
@@ -92,6 +121,7 @@ if __name__== "__main__":
 
 #BFS -- Cledmir
 
+<<<<<<< HEAD
 # def BFS(source, destination):
 #     queque = []
 #     aux = ficha 
@@ -105,6 +135,8 @@ if __name__== "__main__":
 #                 queque.append(i)
 
 
+=======
+>>>>>>> 2b44ad5e98086ed4d707bef4ccca48c5243a2d91
 
 
 #Backtracking -- Diego
