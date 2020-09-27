@@ -64,8 +64,8 @@ class Game():
         self.all_sprite_list = pygame.sprite.Group()
     def printPlayer(self):
         for i in range(len(self.players)):
-            self.players[i].rect.x = (self.players[i].xpos)*100
-            self.players[i].rect.y = (self.players[i].ypos)*100
+            self.players[i].rect.x = (self.players[i].xpos)*50
+            self.players[i].rect.y = (self.players[i].ypos)*50
             self.all_sprite_list.add(self.players[i])
  
  #DFS
@@ -119,10 +119,10 @@ def measure_time(sorting_alg, v):
 def main():
     pygame.init()
     done = False
-    n = 11
+    n = 9
     numPlayer = 4
-    SCREEN_WIDTH = int((n)*100)
-    SCREEN_HEIGHT = int((n)*100)
+    SCREEN_WIDTH = int((n)*50)
+    SCREEN_HEIGHT = int((n)*50)
     BLACK = (0,0,0)
     all_sprite_list = pygame.sprite.Group()
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
@@ -146,9 +146,9 @@ def main():
                 done = True
 
         screen.fill([255, 255, 255])
-        for x in range(100,SCREEN_WIDTH,100):
+        for x in range(50,SCREEN_WIDTH,50):
             pygame.draw.line(screen,BLACK, (x,0),(x,SCREEN_WIDTH), 2)
-        for y in range(100,SCREEN_HEIGHT,100):
+        for y in range(50,SCREEN_HEIGHT,50):
             pygame.draw.line(screen,BLACK, (0,y),(SCREEN_HEIGHT,y), 2)
 
         game.printPlayer()
