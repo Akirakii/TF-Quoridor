@@ -245,7 +245,7 @@ def main():
     # print(end-start)
 
     start = time.time()
-    call_DFS(game, pos_ori, game.players[1].goal)
+    call_DFS(game, [game.players[1].ypos, game.players[1].xpos], game.players[1].goal)
     end = time.time()
     print(end-start)
 
