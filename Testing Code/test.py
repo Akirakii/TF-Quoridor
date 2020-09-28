@@ -1,2 +1,2 @@
-import sys
-print (sys.path)
+for i in range(10):
+    print (i%4)

@@ -48,32 +48,100 @@ class Board():
                 board[i][j].is_shortest_path = False
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, color, xpos, ypos):
+    def __init__(self, color, xpos, ypos, goal):
         self.color = color
         self.xpos = xpos
         self.ypos = ypos
+        self.goal = goal
         super().__init__()
         self.image = pygame.image.load("meteor.png").convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
+    
+    def move(self, board):
+        for indx, i in board[self.goal[indx][0]][self.goal[indx][1]]:
+            if board[self.xpos][self.ypos] == i:
+                return
+        for indx, i in board[self.xpos][self.ypos].neighbours:
+            if i.is_shortest_path == True:
+                if indx == 0:
+                    self.xpos += 1 
+                elif indx == 1:
+                    self.xpos -= 1 
+                elif indx == 2:
+                    self.ypos -= 1 
+                elif indx == 3:
+                    self.ypos += 1 
+
+
 
 class Game():
     def __init__(self, num_players, size):
+        pygame.init()
+        self.game_board = Board(size)
+        self.turn_count = 0
+        self.SCREEN_WIDTH = int((size)*50)
+        self.SCREEN_HEIGHT = int((size)*50)
+        self.BLACK = (0,0,0)
+        self.all_sprite_list = pygame.sprite.Group()
+        self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
+        self.size = size
+
+        #player instance
         self.players = []
         colors = ['red', 'blue', 'yellow', 'green']
         xpos = [int(size/2), int(size/2), 0, size-1]
         ypos = [0, size-1, int(size/2), int(size/2)]
-        self.game_board = Board(size)
-
         for i in range(num_players):
-            self.players.append(Player(colors[i], xpos[i], ypos[i]))
+            goal = get_goal(i)
+            self.players.append(Player(colors[i], xpos[i], ypos[i], goal))
             self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
-        self.all_sprite_list = pygame.sprite.Group()
-    def printPlayer(self):
+            self.all_sprite_list = pygame.sprite.Group()
+        
+        #first draw screen
+        self.draw_screen()
+
+    def get_goal(self, i):
+        goal = []
+        if i == 0:
+            for j in range(self.size):
+                goal.append([self.size][i])
+        elif i == 1:
+            for j in range(self.size):
+                goal.append([0][i])
+        elif i == 2:
+            for j in range(self.size):
+                goal.append([i][self.size])
+        elif i == 3:
+            for j in range(self.size):
+                goal.append([i][0])
+        return goal
+        
+    def draw_screen(self):
+        self.screen.fill([255, 255, 255])
+        for x in range(50,self.SCREEN_WIDTH,50):
+            pygame.draw.line(self.screen,self.BLACK, (x,0),(x,self.SCREEN_WIDTH), 2)
+        for y in range(50,self.SCREEN_HEIGHT,50):
+            pygame.draw.line(self.screen,self.BLACK, (0,y),(self.SCREEN_HEIGHT,y), 2)
+        self.print_player()
+        self.all_sprite_list.draw(self.screen)
+        pygame.display.flip()
+
+
+    def print_player(self):
         for i in range(len(self.players)):
             self.players[i].rect.x = (self.players[i].xpos)*50
             self.players[i].rect.y = (self.players[i].ypos)*50
             self.all_sprite_list.add(self.players[i])
+
+
+    def nextTurn(self):
+        player = self.players[self.turn_count%4]
+        
+        player.move()
+        self.draw_screen()
+        self.turn_count +=1
+        
 
 #DFS
 def DFS(tile_ori, tile_dest, visited_order):
@@ -116,7 +184,7 @@ def find_shortest_path(tile):
 def call_DFS(game, pos_ori, pos_dest):
     board_util = game.game_board.board
     tile_ori = board_util[pos_ori[0]][pos_ori[1]]
-    tile_dest = board_util[pos_dest[0]][pos_dest[1]]
+    tiles_dest = board_util[pos_dest[0]][pos_dest[1]]
     DFS(tile_ori, tile_dest, 0)
     find_shortest_path(tile_dest)
     game.game_board.print_visited_tiles(board_util)
@@ -158,43 +226,28 @@ def measure_time(sorting_alg, v):
   return end-start
 
 def main():
-    pygame.init()
+    game = Game(4, 9)
+    
+    # pos_ori = [1,1]
+    # pos_dest = [3,3]
+    
+    # start = time.time()
+    # BFS(game, pos_ori, pos_dest)
+    # end = time.time()
+    # print(end-start)
+
+    # start = time.time()
+    # call_DFS(game, pos_ori, pos_dest)
+    # end = time.time()
+    # print(end-start)
+
     done = False
-    n = 99
-    numPlayer = 4
-    SCREEN_WIDTH = int((n)*50)
-    SCREEN_HEIGHT = int((n)*50)
-    BLACK = (0,0,0)
-    all_sprite_list = pygame.sprite.Group()
-    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-    game = Game(numPlayer, n)
-    pos_ori = [1,1]
-    pos_dest = [3,3]
-    start = time.time()
-    BFS(game, pos_ori, pos_dest)
-    end = time.time()
-    print(end-start)
-
-    #start = time.time()
-    #call_DFS(game, pos_ori, pos_dest)
-    #end = time.time()
-    #print(end-start)
-
     while not done:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-
-        screen.fill([255, 255, 255])
-        for x in range(50,SCREEN_WIDTH,50):
-            pygame.draw.line(screen,BLACK, (x,0),(x,SCREEN_WIDTH), 2)
-        for y in range(50,SCREEN_HEIGHT,50):
-            pygame.draw.line(screen,BLACK, (0,y),(SCREEN_HEIGHT,y), 2)
-
-        game.printPlayer()
-        game.all_sprite_list.draw(screen)
-        pygame.display.flip()
+            if event.type == pygame.KEYDOWN:
+                game.nextTurn()
 
     pygame.quit()
 
