@@ -1,5 +1,6 @@
 def find_shortest_path(tile):
-    tile.is_shortest_path = True
+    if tile.visited_order != 0:
+        tile.is_shortest_path = True
     if tile.visited_order == 0:
         return tile
     

@@ -13,15 +13,15 @@ class Player(pygame.sprite.Sprite):
     
     def move(self, board):
         tile = board[self.ypos][self.xpos]
-        for indx, i in enumerate(board[self.ypos][self.xpos].neighbours):
+        for i in board[self.ypos][self.xpos].neighbours:
             if i.is_shortest_path == True:
-                if indx == 0:
+                if self.xpos < i.xpos:
                     self.xpos += 1 
-                elif indx == 1:
+                elif self.xpos > i.xpos:
                     self.xpos -= 1 
-                elif indx == 2:
+                elif self.ypos > i.ypos:
                     self.ypos -= 1 
-                elif indx == 3:
+                elif self.ypos < i.ypos:
                     self.ypos += 1
         if board[self.xpos][self.ypos] in self.goal:
             return True

@@ -2,7 +2,13 @@ import Tile
 
 class Board():
     def __init__(self, size):
-        self.board = [[Tile.Tile() for r in range(size)] for c in range(size)]
+        board = []
+        for y in range(size):
+            board.append([])
+            for x in range(size):
+                board[y].append(Tile.Tile(y, x))
+
+        self.board = board
         self.indexing_tiles()
 
     def indexing_tiles(self):
