@@ -1,73 +1,236 @@
+import math
+import pygame
+import time
 
-from collections import defaultdict, deque
 
 
-class Graph(object):
+class Tile():
     def __init__(self):
-        self.nodes = set()
-        self.edges = defaultdict(list)
-        self.distances = {}
+        self.neighbours = []
+        self.visited = False
+        self.visited_order = -1
+        self.is_shortest_path = False
+        element = None
+        self.peso=0
+        self.previus=None
+        self.encontrado=0
+class Board():
+    def __init__(self, size):
+        self.board = [[Tile() for r in range(size)] for c in range(size)]
+        self.indexing_tiles(self.board)
 
-    def add_node(self, value):
-        self.nodes.add(value)
+    def indexing_tiles(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if j + 1 < len(board[i]):
+                    board[i][j].neighbours.append(board[i][j + 1])
 
-    def add_edge(self, from_node, to_node, distance):
-        self.edges[from_node].append(to_node)
-        self.edges[to_node].append(from_node)
-        self.distances[(from_node, to_node)] = distance
+                if j - 1 >= 0:
+                    board[i][j].neighbours.append(board[i][j - 1])
+                if i - 1 >= 0:
+                    board[i][j].neighbours.append(board[i - 1][j])
+                if i + 1 < len(board):
+                    board[i][j].neighbours.append(board[i + 1][j])
 
+    def print_visited_tiles(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                v = board[i][j].peso
 
-def dijkstra(graph, initial):
-    visited = {initial: 0}
-    path = {}
+                print(v, end=",  " if v in range(0, 9) else ", ")
+            print("\n")
 
-    nodes = set(graph.nodes)
+    def print_finding_path(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                v = board[i][j].encontrado
 
-    while nodes:
-        min_node = None
-        for node in nodes:
-            if node in visited:
-                if min_node is None:
-                    min_node = node
-                elif visited[node] < visited[min_node]:
-                    min_node = node
-        if min_node is None:
-            break
+                print(v, end=",  " if v in range(0, 9) else ", ")
+            print("\n")
 
-        nodes.remove(min_node)
-        current_weight = visited[min_node]
+    def print_path(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                print(1 if board[i][j].is_shortest_path else 0, end=",  ")
+            print("\n")
 
-        for edge in graph.edges[min_node]:
-            try:
-                weight = current_weight + graph.distances[(min_node, edge)]
-            except:
-                continue
-            if edge not in visited or weight < visited[edge]:
-                visited[edge] = weight
-                path[edge] = min_node
-
-    return visited, path
-
-
-def shortest_path(graph, origin, destination):
-    visited, paths = dijkstra(graph, origin)
-    full_path = deque()
-    _destination = paths[destination]
-
-    while _destination != origin:
-        full_path.appendleft(_destination)
-        _destination = paths[_destination]
-
-    full_path.appendleft(origin)
-    full_path.append(destination)
-
-    return visited[destination], list(full_path)
+    def reset_tiles(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                board[i][j].visited = False
+                board[i][j].visited_order = -1
+                board[i][j].is_shortest_path = False
 
 
-GraphzZz=Graph()
-GraphzZz.add_node(5)
-GraphzZz.add_node(6)
+class Player(pygame.sprite.Sprite):
+    def __init__(self, color, xpos, ypos):
+        self.color = color
+        self.xpos = xpos
+        self.ypos = ypos
+        super().__init__()
+        self.image = pygame.image.load("meteor.png").convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
 
-GraphzZz.add_edge(5,6,8)
 
-print(shortest_path(GraphzZz,5,6))
+class Game():
+    def __init__(self, num_players, size):
+        self.players = []
+        colors = ['red', 'blue', 'yellow', 'green']
+        xpos = [int(size / 2), int(size / 2), 0, size - 1]
+        ypos = [0, size - 1, int(size / 2), int(size / 2)]
+        self.game_board = Board(size)
+
+        for i in range(num_players):
+            self.players.append(Player(colors[i], xpos[i], ypos[i]))
+            self.game_board.board[ypos[i]][xpos[i]].element = self.players[i]
+        self.all_sprite_list = pygame.sprite.Group()
+
+    def printPlayer(self):
+        for i in range(len(self.players)):
+            self.players[i].rect.x = (self.players[i].xpos) * 50
+            self.players[i].rect.y = (self.players[i].ypos) * 50
+            self.all_sprite_list.add(self.players[i])
+
+
+def find_shortest_path(tile):
+    tile.is_shortest_path = True
+    if tile.visited_order == 0:
+        return tile
+
+    posible_targets = []
+
+    minimum = min(i.visited_order for i in tile.neighbours if i.visited)
+    for i in tile.neighbours:
+        if i.visited_order == minimum:
+            posible_targets.append(i)
+
+    if len(posible_targets) == 1:
+        neighbor_target = posible_targets[0]
+    else:
+        neighbors_minimum = []
+        for i in posible_targets:
+            neighbor_minimum = min(i.visited_order for i in tile.neighbours if i.visited)
+            neighbors_minimum.append(neighbor_minimum)
+
+        minimum = min(i for i in neighbors_minimum)
+        for i in tile.neighbours:
+            if i.visited_order == minimum:
+                neighbor_target = i
+
+    find_shortest_path(neighbor_target)
+
+
+# DFS
+def DFS(tile_ori, tile_dest, visited_order):
+    tile_ori.visited = True
+    tile_ori.visited_order = visited_order
+    if tile_dest.visited == True:
+        return
+    for i in tile_ori.neighbours:
+        if i.visited == False:
+            DFS(i, tile_dest, visited_order + 1)
+
+
+def call_DFS(game, pos_ori, pos_dest):
+    board_util = game.game_board.board
+    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_dest = board_util[pos_dest[0]][pos_dest[1]]
+    DFS(tile_org, tile_dest, 0)
+    game.game_board.print_visited_tiles(board_util)
+    game.game_board.set_all_visited_false(board_util)
+
+
+def dijsktra(game, pos_ori, pos_dest):
+    board_util = game.game_board.board
+    tile_org = board_util[pos_ori[0]][pos_ori[1]]
+    tile_dest = board_util[pos_dest[0]][pos_dest[1]]
+
+    pesoF=0
+    queque = []
+    orden = 0
+    queque.append(tile_org)
+    while tile_org != tile_dest:
+
+        tile_org = queque.pop(0)
+        tile_org.visited_order = orden
+        pesoF=tile_org.peso
+        orden += 1
+        tile_org.visited = True
+        for i in tile_org.neighbours:
+
+            if i.visited == False:
+                i.peso=pesoF+1
+                i.previus=tile_org
+                queque.append(i)
+                i.visited = True
+
+    tile_org.encontrado=tile_org.peso
+
+    while tile_org.previus!=None:
+
+        tile_org.previus.encontrado=tile_org.encontrado-1
+        tile_org=tile_org.previus
+    game.game_board.print_visited_tiles(board_util)
+    game.game_board.print_finding_path(board_util)
+    game.game_board.set_all_visited_false(board_util)
+
+
+def measure_time(sorting_alg, v):
+    start = time.time()
+    n = len(v)
+    sorting_alg(v)
+    end = time.time()
+    return end - start
+
+
+def main():
+    pygame.init()
+    done = False
+    n = 9
+    numPlayer = 4
+    SCREEN_WIDTH = int((n) * 50)
+    SCREEN_HEIGHT = int((n) * 50)
+    BLACK = (0, 0, 0)
+    all_sprite_list = pygame.sprite.Group()
+    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+    game = Game(numPlayer, n)
+    pos_ori = [1, 1]
+    pos_dest = [3, 3]
+    start = time.time()
+    dijsktra(game, pos_ori, pos_dest)
+    end = time.time()
+    print(end - start)
+
+    start = time.time()
+    call_DFS(game, pos_ori, pos_dest)
+    end = time.time()
+    print(end - start)
+
+    while not done:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+        screen.fill([255, 255, 255])
+        for x in range(50, SCREEN_WIDTH, 50):
+            pygame.draw.line(screen, BLACK, (x, 0), (x, SCREEN_WIDTH), 2)
+        for y in range(50, SCREEN_HEIGHT, 50):
+            pygame.draw.line(screen, BLACK, (0, y), (SCREEN_HEIGHT, y), 2)
+
+        game.printPlayer()
+        game.all_sprite_list.draw(screen)
+        pygame.display.flip()
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
+
+# DFS -- Akira
+
+
+# BFS -- Cledmir
+#Dijkstra -- Diego G
