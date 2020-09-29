@@ -2,6 +2,7 @@ import pygame
 import Board
 import Player
 import DFS
+import BFS
 import Find_shortest_path
 
 class Game():
@@ -15,7 +16,8 @@ class Game():
         self.BLACK = (0,0,0)
         self.all_sprite_list = pygame.sprite.Group()
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
-        self.background = pygame.image.load("Quoridor Game/src/assets/board.png").convert()
+        self.background = pygame.image.load("Quoridor Game/src/assets/board.png")
+        self.background = pygame.transform.scale(self.background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
 
         #player instance
@@ -72,8 +74,10 @@ class Game():
     def nextTurn(self):
         board_util = self.game_board.board
         player = self.players[self.turn_count%self.num_players]
-        DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal)
-
+        if player == self.players[0]:
+            DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal)
+        elif player == self.players[1]:
+            BFS.BFS(board_util, [player.ypos, player.xpos], player.goal)
         #debug board 
         print("\n\n///////////////////////////////////")
         self.game_board.print_visited_tiles()
@@ -83,8 +87,8 @@ class Game():
         if player.move(board_util):
             print("Ganaste XD")
             return True
-
-        self.game_board.reset_tiles()
+        
+        #self.game_board.reset_tiles()
         self.draw_screen()
         self.turn_count +=1
         return False
