@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.ypos = ypos
         self.goal = goal
         super().__init__()
-        self.image = pygame.image.load("meteor.png").convert()
+        self.image = pygame.image.load(color).convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         
@@ -89,11 +89,12 @@ class Game():
         self.BLACK = (0,0,0)
         self.all_sprite_list = pygame.sprite.Group()
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
+        self.background = pygame.image.load("Board.png").convert()
         self.size = size
 
         #player instance
         self.players = []
-        colors = ['red', 'blue', 'yellow', 'green']
+        colors = ['red.png', 'blue.png', 'yellow.png', 'green.png']
         xpos = [int(size/2), int(size/2), 0, size-1]
         ypos = [0, size-1, int(size/2), int(size/2)]
         for i in range(num_players):
@@ -124,7 +125,7 @@ class Game():
         
 
     def draw_screen(self):
-        self.screen.fill([255, 255, 255])
+        self.screen.blit(self.background, [0, 0])
         for x in range(50,self.SCREEN_WIDTH,50):
             pygame.draw.line(self.screen,self.BLACK, (x,0),(x,self.SCREEN_WIDTH), 2)
         for y in range(50,self.SCREEN_HEIGHT,50):
@@ -235,7 +236,7 @@ def measure_time(sorting_alg, v):
   return end-start
 
 def main():
-    game = Game(4, 9)
+    game = Game(4, 21)
     
     pos_ori = [7,7]
     
