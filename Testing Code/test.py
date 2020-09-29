@@ -1,3 +1,3 @@
-def method():
-    for i in range(10):
-        print (i%4)
+array = [1,2,3,4,6,67,7]
+for inx, i in enumerate(array):
+    print(inx,i)

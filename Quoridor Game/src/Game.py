@@ -1,10 +1,13 @@
 import pygame
 import Board
 import Player
+import DFS
+import Find_shortest_path
 
 class Game():
     def __init__(self, num_players, size):
         pygame.init()
+        self.num_players = num_players
         self.game_board = Board.Board(size)
         self.turn_count = 0
         self.SCREEN_WIDTH = int((size)*50)
@@ -28,6 +31,7 @@ class Game():
         
         #first draw screen
         self.draw_screen()
+
 
     def get_goal(self, i):
         board_util = self.game_board.board
@@ -66,10 +70,21 @@ class Game():
 
 
     def nextTurn(self):
-        player = self.players[self.turn_count%4]
+        board_util = self.game_board.board
+        player = self.players[self.turn_count%self.num_players]
+        DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal)
 
-        #call_DFS(self, [game.players[1].ypos, game.players[1].xpos], game.players[1].goal)
+        #debug board 
+        print("\n\n///////////////////////////////////")
+        self.game_board.print_visited_tiles()
+        print("----------------------------------\n")
+        self.game_board.print_path()
 
-        player.move()
+        if player.move(board_util):
+            print("Ganaste XD")
+            return True
+
+        self.game_board.reset_tiles()
         self.draw_screen()
         self.turn_count +=1
+        return False

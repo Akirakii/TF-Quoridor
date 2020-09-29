@@ -12,9 +12,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
     
     def move(self, board):
-        if board[self.xpos][self.ypos] in self.goal:
-            return
-        for indx, i in board[self.xpos][self.ypos].neighbours:
+        tile = board[self.ypos][self.xpos]
+        for indx, i in enumerate(board[self.ypos][self.xpos].neighbours):
             if i.is_shortest_path == True:
                 if indx == 0:
                     self.xpos += 1 
@@ -23,4 +22,7 @@ class Player(pygame.sprite.Sprite):
                 elif indx == 2:
                     self.ypos -= 1 
                 elif indx == 3:
-                    self.ypos += 1 
+                    self.ypos += 1
+        if board[self.xpos][self.ypos] in self.goal:
+            return True
+        return False
