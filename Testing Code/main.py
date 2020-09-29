@@ -57,11 +57,15 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("meteor.png").convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
+        
+    # def init_goal(self, game, goal_pos):
+    #     board_util = game.game_board.board
+    #     for i in range(game.size):
+    #         self.goal.append(board_util[goal_pos[i][0]][goal_pos[i][1]]) 
     
     def move(self, board):
-        for indx, i in board[self.goal[indx][0]][self.goal[indx][1]]:
-            if board[self.xpos][self.ypos] == i:
-                return
+        if board[self.xpos][self.ypos] in self.goal:
+            return
         for indx, i in board[self.xpos][self.ypos].neighbours:
             if i.is_shortest_path == True:
                 if indx == 0:
@@ -93,7 +97,7 @@ class Game():
         xpos = [int(size/2), int(size/2), 0, size-1]
         ypos = [0, size-1, int(size/2), int(size/2)]
         for i in range(num_players):
-            goal = get_goal(i)
+            goal = self.get_goal(i)
             self.players.append(Player(colors[i], xpos[i], ypos[i], goal))
             self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
             self.all_sprite_list = pygame.sprite.Group()
@@ -102,21 +106,23 @@ class Game():
         self.draw_screen()
 
     def get_goal(self, i):
+        board_util = self.game_board.board
         goal = []
         if i == 0:
             for j in range(self.size):
-                goal.append([self.size][i])
+                goal.append(board_util[self.size-1][j])
         elif i == 1:
             for j in range(self.size):
-                goal.append([0][i])
+                goal.append(board_util[0][j])
         elif i == 2:
             for j in range(self.size):
-                goal.append([i][self.size])
+                goal.append(board_util[j][self.size-1])
         elif i == 3:
             for j in range(self.size):
-                goal.append([i][0])
+                goal.append(board_util[j][0])
         return goal
         
+
     def draw_screen(self):
         self.screen.fill([255, 255, 255])
         for x in range(50,self.SCREEN_WIDTH,50):
@@ -144,14 +150,18 @@ class Game():
         
 
 #DFS
-def DFS(tile_ori, tile_dest, visited_order):
-    tile_ori.visited = True
-    tile_ori.visited_order = visited_order
-    if tile_dest.visited == True:
-        return
-    for i in tile_ori.neighbours: 
+def DFS(tile, goal, visited_order):
+    tile.visited = True
+    tile.visited_order = visited_order
+    for i in goal:
+        if i.visited == True:
+            return tile
+    for i in tile.neighbours: 
         if i.visited == False: 
-            DFS(i, tile_dest, visited_order+1)
+            last_tile = DFS(i, goal, visited_order+1)
+            if last_tile is not None:
+                return last_tile
+    return None
 
 def find_shortest_path(tile):
     tile.is_shortest_path = True
@@ -181,12 +191,11 @@ def find_shortest_path(tile):
     find_shortest_path(neighbor_target)
 
 
-def call_DFS(game, pos_ori, pos_dest):
+def call_DFS(game, pos_ori, goal):
     board_util = game.game_board.board
     tile_ori = board_util[pos_ori[0]][pos_ori[1]]
-    tiles_dest = board_util[pos_dest[0]][pos_dest[1]]
-    DFS(tile_ori, tile_dest, 0)
-    find_shortest_path(tile_dest)
+    last_tile = DFS(tile_ori, goal, 0)
+    find_shortest_path(last_tile)
     game.game_board.print_visited_tiles(board_util)
     game.game_board.print_path(board_util)
     game.game_board.reset_tiles(board_util)
@@ -228,18 +237,17 @@ def measure_time(sorting_alg, v):
 def main():
     game = Game(4, 9)
     
-    # pos_ori = [1,1]
-    # pos_dest = [3,3]
+    pos_ori = [7,7]
     
     # start = time.time()
     # BFS(game, pos_ori, pos_dest)
     # end = time.time()
     # print(end-start)
 
-    # start = time.time()
-    # call_DFS(game, pos_ori, pos_dest)
-    # end = time.time()
-    # print(end-start)
+    start = time.time()
+    call_DFS(game, [game.players[1].ypos, game.players[1].xpos], game.players[1].goal)
+    end = time.time()
+    print(end-start)
 
     done = False
     while not done:
