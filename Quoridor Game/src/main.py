@@ -1,8 +1,6 @@
-import math
 import pygame
 import time
 import Game
-import BFS
 
 
 

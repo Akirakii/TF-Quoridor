@@ -1,9 +1,8 @@
 import pygame
 import Board
 import Player
-import DFS
-import BFS
-import Find_shortest_path
+import algorithms.DFS as DFS
+import algorithms.BFS as BFS
 
 class Game():
     def __init__(self, num_players, size):

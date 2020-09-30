@@ -1,4 +1,4 @@
-import Find_shortest_path as Fsp
+import algorithms.Find_shortest_path as Fsp
 
 
 def DFS(tile, goal, visited_order, tile_obstacles):
