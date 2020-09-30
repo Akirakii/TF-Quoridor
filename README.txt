@@ -1,1 +1,7 @@
 PRECIONAR ESPACIO PARA AVANZAR AL SIGUIENTE TURNO
+LA DOCUMENTACION SE ENCUENTRA EN:
+./Quoridor Game/Trabajo Parcial.ipynb
+./Quoridor Game/TP_Complegidad_PPT.pptx
+
+EL EJECUTABLE DEL JUEGO SE ENCUENTRA EN :
+./Quoridor Game/src/main
