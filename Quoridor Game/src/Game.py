@@ -17,7 +17,10 @@ class Game():
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
         self.background = pygame.image.load("Quoridor Game/src/assets/board.png")
         self.background = pygame.transform.scale(self.background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
+        self.Game_Over_background = pygame.image.load("Quoridor Game/src/assets/gameover.png")
+        self.Game_Over_background = pygame.transform.scale(self.Game_Over_background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
+        self.game_over = False
 
         #player instance
         self.players = []
@@ -52,14 +55,23 @@ class Game():
         
 
     def draw_screen(self):
-        self.screen.blit(self.background, [0, 0])
-        for x in range(50,self.SCREEN_WIDTH,50):
-            pygame.draw.line(self.screen,self.BLACK, (x,0),(x,self.SCREEN_WIDTH), 2)
-        for y in range(50,self.SCREEN_HEIGHT,50):
-            pygame.draw.line(self.screen,self.BLACK, (0,y),(self.SCREEN_HEIGHT,y), 2)
-        self.print_player()
-        self.all_sprite_list.draw(self.screen)
-        pygame.display.flip()
+        if self.game_over == False:
+            self.screen.blit(self.background, [0, 0])
+            for x in range(50,self.SCREEN_WIDTH,50):
+                pygame.draw.line(self.screen,self.BLACK, (x,0),(x,self.SCREEN_WIDTH), 2)
+            for y in range(50,self.SCREEN_HEIGHT,50):
+                pygame.draw.line(self.screen,self.BLACK, (0,y),(self.SCREEN_HEIGHT,y), 2)
+            self.print_player()
+            self.all_sprite_list.draw(self.screen)
+            pygame.display.flip()
+
+    def game_over_print(self,player):
+        self.screen.blit(self.Game_Over_background, [0, 0])
+        font = pygame.font.SysFont("serif", 25)
+        posPng= player.color.find(".png")
+        text = font.render("El jugador " + player.color[25:posPng] + " a ganado", True , self.BLACK)
+        self.screen.blit(text, (self.SCREEN_WIDTH/5,self.SCREEN_HEIGHT-(self.SCREEN_HEIGHT/5)))
+        pygame.display.flip() 
 
 
     def print_player(self):
@@ -93,8 +105,7 @@ class Game():
         self.draw_screen()
 
         if game_over:
-            print(player.color, " WON! :)")
-            return True
+            self.game_over_print(player)
 
         self.turn_count +=1
         return False
