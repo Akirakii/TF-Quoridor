@@ -2,6 +2,7 @@ import pygame
 import Board
 import Player
 import DFS
+import BFS
 import Find_shortest_path
 
 class Game():
@@ -15,7 +16,8 @@ class Game():
         self.BLACK = (0,0,0)
         self.all_sprite_list = pygame.sprite.Group()
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
-        self.background = pygame.image.load("Quoridor Game/src/assets/board.png").convert()
+        self.background = pygame.image.load("Quoridor Game/src/assets/board.png")
+        self.background = pygame.transform.scale(self.background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
 
         #player instance

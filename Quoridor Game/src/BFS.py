@@ -18,6 +18,3 @@ def BFS(board, pos_ori, goal):
                 queque.append(i)
     
     FSP.find_shortest_path(tile_ori)
-    #game.game_board.print_visited_tiles(board_util)
-    #game.game_board.print_path(board_util)
-    #game.game_board.reset_tiles(board_util)
