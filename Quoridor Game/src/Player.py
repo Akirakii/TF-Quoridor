@@ -14,20 +14,18 @@ class Player(pygame.sprite.Sprite):
     
     def move(self):
         self.route[self.ypos][self.xpos] = False
-        if self.route[self.ypos][self.xpos+1]:
+        if self.xpos+1 < len(self.route) and self.route[self.ypos][self.xpos+1]:
             self.xpos += 1 
-        elif self.route[self.ypos][self.xpos-1]:
+        elif self.xpos-1 >= 0 and self.route[self.ypos][self.xpos-1]:
             self.xpos -= 1
-        elif self.route[self.ypos-1][self.xpos]:
+        elif self.ypos-1 >= 0 and self.route[self.ypos-1][self.xpos]:
             self.ypos -= 1 
-        elif self.route[self.ypos+1][self.xpos]:
+        elif self.xpos+1 < len(self.route) and self.route[self.ypos+1][self.xpos]:
             self.ypos += 1 
 
         self.route[self.ypos][self.xpos] = False
 
-        print(self.ypos, self.xpos)
         for i in self.goal:
-            print(i.ypos, i.xpos)
             if self.ypos == i.ypos and self.xpos == i.xpos:
                 return True
         return False

@@ -75,26 +75,28 @@ class Game():
         board_util = self.game_board.board
         player = self.players[self.turn_count%self.num_players]
 
-        tile_obstacles = []
+        obstacles = []
         #each player is an obstacle
         for i in self.players:
             if i != player:
-                tile_obstacles.append(board_util[i.ypos][i.xpos])
+                obstacles.append(i)
 
-        if self.turn_count == 0 or self.game_board.is_colliding(player.route, tile_obstacles, [player.xpos, player.ypos], player.goal):
-            player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, tile_obstacles)
+        if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
+            player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
 
-        if player.move():
-            return True
+        game_over = player.move()
 
         #debug board 
-        print("----------------------------------\n")
+        print(player.color, "----------------------------------\n")
         self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
         self.draw_screen()
-        
+
+        if game_over:
+            print(player.color, " WON! :)")
+            return True
 
         self.turn_count +=1
         return False

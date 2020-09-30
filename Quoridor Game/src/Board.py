@@ -44,24 +44,26 @@ class Board():
                 self.board[i][j].visited_order = -1
 
 
-    def is_colliding(self, route, tile_obstacles, pos, goal):
+    def is_colliding(self, route, obstacles, pos, goal):
         x, y = pos[0], pos[1]
 
-        for i in range(len(tile_obstacles)):
+        for i in obstacles:
             if i.xpos == x and i.ypos == y:
                 return True
         
         for i in goal:
-            if y == i.ypos and x == i.xpos:
+            if i.xpos == x and i.ypos == y:
+                print("XD")
                 return False
 
         route[y][x] = False
-        if route[y][x+1]:
-            self.is_colliding(route, tile_obstacles, [x+1, y], goal)
-        elif route[y][x-1]:
-            self.is_colliding(route, tile_obstacles, [x-1, y], goal)
-        elif route[y-1][x]:
-            self.is_colliding(route, tile_obstacles, [x, y-1], goal)
-        elif route[y+1][x]:
-            self.is_colliding(route, tile_obstacles, [x, y+1], goal)
+        if x+1 < len(route) and route[y][x+1]:
+            is_colliding = self.is_colliding(route, obstacles, [x+1, y], goal)
+        elif x-1 >= 0 and route[y][x-1]:
+            is_colliding = self.is_colliding(route, obstacles, [x-1, y], goal)
+        elif y-1 >= 0 and route[y-1][x]:
+            is_colliding = self.is_colliding(route, obstacles, [x, y-1], goal)
+        elif y+1 < len(route) and route[y+1][x]:
+            is_colliding = self.is_colliding(route, obstacles, [x, y+1], goal)
         route[y][x] = True
+        return is_colliding

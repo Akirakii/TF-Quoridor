@@ -7,8 +7,8 @@ import BFS
 
 
 def main():
-    num_players = 1
-    board_size = 21
+    num_players = 4
+    board_size = 9
     game = Game.Game(num_players, board_size)
 
     done = False

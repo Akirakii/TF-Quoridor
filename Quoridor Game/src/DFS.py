@@ -14,8 +14,13 @@ def DFS(tile, goal, visited_order, tile_obstacles):
                 return last_tile
     return None
 
-def call_DFS(board, pos_ori, goal, tile_obstacles):
+def call_DFS(board, pos_ori, goal, obstacles):
     tile_ori = board[pos_ori[0]][pos_ori[1]]
+
+    tile_obstacles = []
+    for i in obstacles:
+        tile_obstacles.append(board[i.ypos][i.xpos])
+    
     last_tile = DFS(tile_ori, goal, 0, tile_obstacles)
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))]
     Fsp.find_shortest_path(last_tile, shortest_path)
