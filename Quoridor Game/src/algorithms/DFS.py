@@ -1,5 +1,4 @@
-import algorithms.Find_shortest_path as Fsp
-
+import algorithms.Find_shortest_path as FSP
 
 def DFS(tile, goal, visited_order, tile_obstacles):
     tile.visited = True
@@ -23,6 +22,6 @@ def call_DFS(board, pos_ori, goal, obstacles):
     
     last_tile = DFS(tile_ori, goal, 0, tile_obstacles)
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))]
-    Fsp.find_shortest_path(last_tile, shortest_path)
+    FSP.find_shortest_path(last_tile, shortest_path)
     return shortest_path
   

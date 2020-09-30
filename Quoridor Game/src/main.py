@@ -2,8 +2,6 @@ import pygame
 import time
 import Game
 
-
-
 def main():
     num_players = 4
     board_size = 9

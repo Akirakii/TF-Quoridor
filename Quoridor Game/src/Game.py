@@ -70,7 +70,6 @@ class Game():
 
 
     def next_turn(self):
-        #DEBE DE CALCULARSE EL CAMINO SOLO CUANDO EXISTA UN OBSTACULO EN EL CAMINO. NO DEBE DE CALCULARSE POR TURNO
         board_util = self.game_board.board
         player = self.players[self.turn_count%self.num_players]
 
@@ -81,7 +80,7 @@ class Game():
                 obstacles.append(i)
 
         if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
-            player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
 
