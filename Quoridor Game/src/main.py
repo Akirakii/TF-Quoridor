@@ -1,10 +1,13 @@
+import sys
 import pygame
 import time
 import Game
 
 def main():
+    sys.setrecursionlimit(10**7)
+
     num_players = 4
-    board_size = 31
+    board_size = 41
     game = Game.Game(num_players, board_size)
 
     done = False

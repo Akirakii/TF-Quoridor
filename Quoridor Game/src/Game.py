@@ -111,25 +111,19 @@ class Game():
             if self.turn_count%self.num_players == 2:
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 3:
-<<<<<<< HEAD
-                player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            print("\n\n///////////////////////////////////")
-            self.game_board.print_visited_tiles()
-=======
                 player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             # print("\n\n///////////////////////////////////")
             # self.game_board.print_visited_tiles()
->>>>>>> 2bfa292732f163c48e57faabf98feef2421fc600
 
         self.game_over = player.move()
         end = time.time()
-        print("El tiempo de ejecucion es: " + str(end-start))
+        #print("El tiempo de ejecucion es: " + str(end-start))
         self.times[self.turn_count%self.num_players].append(end-start) 
 
         # print(player.color, "----------------------------------\n")
         # self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
-        self.draw_screen()
+        #self.draw_screen()
 
         if self.game_over:
             self.game_over_print(player)
