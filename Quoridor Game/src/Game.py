@@ -107,11 +107,11 @@ class Game():
             if self.turn_count%self.num_players == 0:
                 player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 1:
-                player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 2:
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 3:
-                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             # print("\n\n///////////////////////////////////")
             # self.game_board.print_visited_tiles()
 
@@ -123,7 +123,7 @@ class Game():
         # print(player.color, "----------------------------------\n")
         # self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
-        #self.draw_screen()
+        self.draw_screen()
 
         if self.game_over:
             self.game_over_print(player)

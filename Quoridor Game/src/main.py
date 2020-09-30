@@ -6,8 +6,8 @@ import Game
 def main():
     sys.setrecursionlimit(10**7)
 
-    num_players = 4
-    board_size = 41
+    num_players = 3
+    board_size = 51
     game = Game.Game(num_players, board_size)
 
     done = False
