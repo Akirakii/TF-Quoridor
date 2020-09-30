@@ -96,26 +96,24 @@ class Game():
         for i in self.players:
             if i != player:
                 obstacles.append(i)
-#def measure_time(sorting_alg, v):
-#  start = time.time()
-#  n = len(v)
-#  sorting_alg(v)
-#  end = time.time()
- # return end-start
+
         start = time.time()
+
+        #Ejecutamos los algoritmos de busqueda cada vez que se detecta una colision o en el primer turno del jugador.
+        #Los algoritmos de busqueda nos retorna la matriz con el camino de la solucion
         if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
-            if self.turn_count%self.num_players == 0:
+            if self.turn_count%self.num_players == 0: #El primer jugador ejecuta DFS
                 player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if self.turn_count%self.num_players == 1:
+            if self.turn_count%self.num_players == 1: #El primer jugador ejecuta BFS
                 player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if self.turn_count%self.num_players == 2:
+            if self.turn_count%self.num_players == 2: #El primer jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if self.turn_count%self.num_players == 3:
+            if self.turn_count%self.num_players == 3: #El primer jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             # print("\n\n///////////////////////////////////")
             # self.game_board.print_visited_tiles()
 
-        self.game_over = player.move()
+        self.game_over = player.move() #el jugador se movera por la matriz solucion
         end = time.time()
         #print("El tiempo de ejecucion es: " + str(end-start))
         self.times[self.turn_count%self.num_players].append(end-start) 
@@ -123,7 +121,7 @@ class Game():
         # print(player.color, "----------------------------------\n")
         # self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
-        self.draw_screen()
+        #self.draw_screen()
 
         if self.game_over:
             self.game_over_print(player)

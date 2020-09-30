@@ -19,7 +19,7 @@ def find_shortest_path(tile, shortest_path, weight_ori=-1):
             neighbor_minimum = min(i.visited_order for i in tile.neighbours if i.visited) # se almacena el minimo de los vecinos del nodo candidato
             neighbors_minimum.append(neighbor_minimum) 
 
-        minimum = min(i for i in neighbors_minimum) # se selcciona el candidato con el vecino minimo 
+        minimum = min(i for i in neighbors_minimum) # se selcciona el candidato con el minimo de los valores minimos de los vecinos
         for i in tile.neighbours:
             if i.visited_order == minimum:
                 neighbor_target = i

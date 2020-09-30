@@ -2,6 +2,7 @@ import sys
 import pygame
 import time
 import Game
+import matplotlib.pyplot as plt
 
 def main():
     sys.setrecursionlimit(10**7)
@@ -10,14 +11,15 @@ def main():
     board_size = 51
     game = Game.Game(num_players, board_size)
 
+
     done = False
     while not done:
+        if game.game_over == False:
+                if game.next_turn():
+                    done = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-            if game.game_over == False:
-                if game.next_turn():
-                    done = True
             # if event.type == pygame.KEYDOWN and game.game_over == False:
             #     if game.next_turn():
             #         done = True
@@ -29,6 +31,20 @@ def main():
         for j in range(len(game.times[i])):
             print(game.times[i][j], end = ",  ")
         print("\n")
+
+
+    
+    for i in range(len(game.times)):
+        turns = []
+        for j in range(len(game.times[i])):
+            turns.append(j)
+        plt.plot(turns, game.times[i])   
+
+    plt.xlabel('turns')
+    plt.ylabel('time in sec')
+    plt.title('time test')
+    plt.legend(['DFS','BFS','Dijkstra'])
+    plt.show()
 
     pygame.quit()
 

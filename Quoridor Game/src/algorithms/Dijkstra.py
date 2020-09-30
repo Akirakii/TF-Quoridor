@@ -26,8 +26,8 @@ def dijkstra(board, pos_ori, goal, obstacles):
         tile.visited = True
         tile = queue.pop(0)# saca un nodo de la cola y lo asigna a la variable tile
         last_weight = queue_last_weight.pop(0) #obtenemos el peso del nodo anterior
-        tile.weight += last_weight
-        tile.visited_order = tile.weight 
+        tile.weight += last_weight # el peso se suma al anterior peso
+        tile.visited_order = tile.weight # almacenamos el peso en la matriz de nodos visitados
 
         if tile in goal: # se verifica si el tile es el destino
             break # si se llego al destino se rompe el bucle
