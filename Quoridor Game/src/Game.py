@@ -23,7 +23,9 @@ class Game():
         self.Game_Over_background = pygame.transform.scale(self.Game_Over_background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
         self.game_over = False
-        self.times =  []
+        self.times=[]
+        for i in range(num_players):
+            self.times.append([])
 
 
         #player instance
@@ -105,22 +107,27 @@ class Game():
             if self.turn_count%self.num_players == 0:
                 player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 1:
-                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 2:
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 3:
+<<<<<<< HEAD
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
+=======
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            # print("\n\n///////////////////////////////////")
+            # self.game_board.print_visited_tiles()
+>>>>>>> 2bfa292732f163c48e57faabf98feef2421fc600
 
         self.game_over = player.move()
-        # end = time.time()
-        # print("El tiempo de ejecucion es: " + end-start)
-        # self.times[self.turn_count%self.num_players].append(end-start) 
+        end = time.time()
+        print("El tiempo de ejecucion es: " + str(end-start))
+        self.times[self.turn_count%self.num_players].append(end-start) 
 
-        #debug board 
-        print(player.color, "----------------------------------\n")
-        self.game_board.print_path(player.route)
+        # print(player.color, "----------------------------------\n")
+        # self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
         self.draw_screen()
 
