@@ -97,7 +97,7 @@ class Game():
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
 
-        game_over = player.move()
+        self.game_over = player.move()
 
         #debug board 
         print(player.color, "----------------------------------\n")
@@ -105,7 +105,7 @@ class Game():
         self.game_board.reset_tiles()
         self.draw_screen()
 
-        if game_over:
+        if self.game_over:
             self.game_over_print(player)
 
         self.turn_count +=1
