@@ -14,9 +14,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and game.game_over == False:
                 if game.next_turn():
                     done = True
+            if event.type == pygame.MOUSEBUTTONDOWN and game.game_over == True:
+                done = True
 
     pygame.quit()
 
