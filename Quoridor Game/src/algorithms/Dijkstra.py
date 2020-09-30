@@ -18,7 +18,7 @@ def dijkstra(board, pos_ori, goal, obstacles):
     order = 0 # order: inicializamos el orden de visita
     queue.append(tile)
     queue_last_weight.append(0)
-    
+    weight_ori = tile.weight # se le asigna el peso del primer nodo, para que el algoritmo de find_shortest_path lo busque
     tile.visited = True #se marca como visitado el primer nodo
     
     #Visita cada nodo hasta encontrar el destino
@@ -43,5 +43,5 @@ def dijkstra(board, pos_ori, goal, obstacles):
     
     #Creamos una matrix con el tamaño del tablero para que nos represente el camino que va a tomar el jugador
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))] #lo rellenamos de False por cada nodo
-    FSP.find_shortest_path(tile, shortest_path) #nos retorna la matriz con el camino en True
+    FSP.find_shortest_path(tile, shortest_path, weight_ori) #nos retorna la matriz con el camino en True
     return shortest_path #regresanis el camino que tomara el jugadorqueue_last_weight.pop(0)

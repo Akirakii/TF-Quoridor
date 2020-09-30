@@ -1,7 +1,7 @@
-def find_shortest_path(tile, shortest_path):
+def find_shortest_path(tile, shortest_path, weight_ori=-1):
     if tile.visited_order != 0: #mientras no llegue a su destino, va marcando True en el camino
         shortest_path[tile.ypos][tile.xpos] = True
-    if tile.visited_order == 0: #cuando encuentra la posicion del jugador, retorna 
+    if tile.visited_order == 0 or tile.weight == weight_ori: #cuando encuentra la posicion del jugador, retorna 
         return
     
     posible_targets = [] #almacenamos todos los valores minimos repetidos aqui
@@ -24,4 +24,4 @@ def find_shortest_path(tile, shortest_path):
             if i.visited_order == minimum:
                 neighbor_target = i
 
-    find_shortest_path(neighbor_target, shortest_path) #se llama al vecino destino
+    find_shortest_path(neighbor_target, shortest_path, weight_ori) #se llama al vecino destino

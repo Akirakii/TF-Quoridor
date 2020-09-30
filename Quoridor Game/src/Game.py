@@ -103,13 +103,13 @@ class Game():
         start = time.time()
         if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
             if self.turn_count%self.num_players == 0:
-                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 1:
                 player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 2:
-                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 3:
-                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
 
