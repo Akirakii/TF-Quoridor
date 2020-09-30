@@ -43,7 +43,6 @@ class Board():
                 self.board[i][j].visited = False
                 self.board[i][j].visited_order = -1
 
-
     def is_colliding(self, route, obstacles, pos, goal):
         x, y = pos[0], pos[1]
 
@@ -53,7 +52,6 @@ class Board():
         
         for i in goal:
             if i.xpos == x and i.ypos == y:
-                print("XD")
                 return False
 
         route[y][x] = False

@@ -5,3 +5,4 @@ class Tile():
         self.neighbours = []
         self.visited = False
         self.visited_order = -1
+        self.weight = 1

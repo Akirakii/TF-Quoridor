@@ -1,4 +1,5 @@
 import algorithms.Find_shortest_path as FSP
+
 def BFS(board, pos_ori, goal, obstacles):
     tile_obstacles = []
     for i in obstacles:
