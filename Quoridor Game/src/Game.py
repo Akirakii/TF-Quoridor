@@ -110,18 +110,18 @@ class Game():
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if self.turn_count%self.num_players == 3: #El primer jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            # print("\n\n///////////////////////////////////")
-            # self.game_board.print_visited_tiles()
+            print("\n\n///////////////////////////////////")
+            self.game_board.print_visited_tiles()
 
         self.game_over = player.move() #el jugador se movera por la matriz solucion
         end = time.time()
-        #print("El tiempo de ejecucion es: " + str(end-start))
+        print("El tiempo de ejecucion es: " + str(end-start))
         self.times[self.turn_count%self.num_players].append(end-start) 
 
-        # print(player.color, "----------------------------------\n")
-        # self.game_board.print_path(player.route)
+        print(player.color, "----------------------------------\n")
+        self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
-        #self.draw_screen()
+        self.draw_screen()
 
         if self.game_over:
             self.game_over_print(player)
