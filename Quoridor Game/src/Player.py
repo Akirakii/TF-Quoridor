@@ -6,23 +6,28 @@ class Player(pygame.sprite.Sprite):
         self.xpos = xpos
         self.ypos = ypos
         self.goal = goal
+        self.route = None
         super().__init__()
         self.image = pygame.image.load(color).convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
     
-    def move(self, board):
-        tile = board[self.ypos][self.xpos]
-        for i in board[self.ypos][self.xpos].neighbours:
-            if i.is_shortest_path == True:
-                if self.xpos < i.xpos:
-                    self.xpos += 1 
-                elif self.xpos > i.xpos:
-                    self.xpos -= 1 
-                elif self.ypos > i.ypos:
-                    self.ypos -= 1 
-                elif self.ypos < i.ypos:
-                    self.ypos += 1
-        if board[self.xpos][self.ypos] in self.goal:
-            return True
+    def move(self):
+        self.route[self.ypos][self.xpos] = False
+        if self.route[self.ypos][self.xpos+1]:
+            self.xpos += 1 
+        elif self.route[self.ypos][self.xpos-1]:
+            self.xpos -= 1
+        elif self.route[self.ypos-1][self.xpos]:
+            self.ypos -= 1 
+        elif self.route[self.ypos+1][self.xpos]:
+            self.ypos += 1 
+
+        self.route[self.ypos][self.xpos] = False
+
+        print(self.ypos, self.xpos)
+        for i in self.goal:
+            print(i.ypos, i.xpos)
+            if self.ypos == i.ypos and self.xpos == i.xpos:
+                return True
         return False

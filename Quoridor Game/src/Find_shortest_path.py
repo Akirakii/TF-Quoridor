@@ -1,6 +1,6 @@
-def find_shortest_path(tile):
+def find_shortest_path(tile, shortest_path):
     if tile.visited_order != 0:
-        tile.is_shortest_path = True
+        shortest_path[tile.ypos][tile.xpos] = True
     if tile.visited_order == 0:
         return tile
     
@@ -24,4 +24,4 @@ def find_shortest_path(tile):
             if i.visited_order == minimum:
                 neighbor_target = i
 
-    find_shortest_path(neighbor_target)
+    find_shortest_path(neighbor_target, shortest_path)

@@ -26,7 +26,6 @@ class Game():
         for i in range(num_players):
             goal = self.get_goal(i)
             self.players.append(Player.Player(colors[i], xpos[i], ypos[i], goal))
-            self.game_board.board[ypos[i]][xpos[i]].element = self.players[i] 
             self.all_sprite_list = pygame.sprite.Group()
         
         #first draw screen
@@ -69,22 +68,31 @@ class Game():
             self.all_sprite_list.add(self.players[i])
 
 
-    def nextTurn(self):
+    def next_turn(self):
+        #DEBE DE CALCULARSE EL CAMINO SOLO CUANDO EXISTA UN OBSTACULO EN EL CAMINO. NO DEBE DE CALCULARSE POR TURNO
         board_util = self.game_board.board
         player = self.players[self.turn_count%self.num_players]
-        DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal)
 
-        #debug board 
-        print("\n\n///////////////////////////////////")
-        self.game_board.print_visited_tiles()
-        print("----------------------------------\n")
-        self.game_board.print_path()
+        tile_obstacles = []
+        #each player is an obstacle
+        for i in self.players:
+            if i != player:
+                tile_obstacles.append(board_util[i.ypos][i.xpos])
 
-        if player.move(board_util):
-            print("Ganaste XD")
+        if self.turn_count == 0 or self.game_board.is_colliding(player.route, tile_obstacles, [player.xpos, player.ypos], player.goal):
+            player.route = DFS.call_DFS(board_util, [player.ypos, player.xpos], player.goal, tile_obstacles)
+            print("\n\n///////////////////////////////////")
+            self.game_board.print_visited_tiles()
+
+        if player.move():
             return True
 
+        #debug board 
+        print("----------------------------------\n")
+        self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
         self.draw_screen()
+        
+
         self.turn_count +=1
         return False

@@ -68,15 +68,14 @@ class Player(pygame.sprite.Sprite):
         self.xpos = xpos
         self.ypos = ypos
         super().__init__()
-        self.image = pygame.image.load("meteor.png").convert()
+        self.image = pygame.image.load(color).convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
-
 
 class Game():
     def __init__(self, num_players, size):
         self.players = []
-        colors = ['red', 'blue', 'yellow', 'green']
+        colors = ['Quoridor Game/src/assets/red.png', 'Quoridor Game/src/assets/blue.png', 'Quoridor Game/src/assets/yellow.png', 'Quoridor Game/src/assets/green.png']
         xpos = [int(size / 2), int(size / 2), 0, size - 1]
         ypos = [0, size - 1, int(size / 2), int(size / 2)]
         self.game_board = Board(size)
