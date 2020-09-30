@@ -1,7 +1,10 @@
 import Tile
 
 class Board():
+    #size: se le asigna el tamaño del tablero
+    #size
     def __init__(self, size):
+
         self.size = size
         board = []
         for y in range(size):
@@ -42,6 +45,7 @@ class Board():
             for j in range(self.size):
                 self.board[i][j].visited = False
                 self.board[i][j].visited_order = -1
+                self.board[i][j].weight = 1
 
     def is_colliding(self, route, obstacles, pos, goal):
         x, y = pos[0], pos[1]

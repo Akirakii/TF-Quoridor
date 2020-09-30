@@ -4,6 +4,7 @@ import Player
 import algorithms.DFS as DFS
 import algorithms.BFS as BFS
 import algorithms.Dijkstra as Dijkstra
+import time
 
 class Game():
     def __init__(self, num_players, size):
@@ -22,6 +23,8 @@ class Game():
         self.Game_Over_background = pygame.transform.scale(self.Game_Over_background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
         self.game_over = False
+        self.times =  []
+
 
         #player instance
         self.players = []
@@ -91,13 +94,29 @@ class Game():
         for i in self.players:
             if i != player:
                 obstacles.append(i)
-
+#def measure_time(sorting_alg, v):
+#  start = time.time()
+#  n = len(v)
+#  sorting_alg(v)
+#  end = time.time()
+ # return end-start
+        start = time.time()
         if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
-            player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            if self.turn_count%self.num_players == 0:
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            if self.turn_count%self.num_players == 1:
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            if self.turn_count%self.num_players == 2:
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            if self.turn_count%self.num_players == 3:
+                player.route = BFS.BFS(board_util, [player.ypos, player.xpos], player.goal, obstacles)
             print("\n\n///////////////////////////////////")
             self.game_board.print_visited_tiles()
 
         self.game_over = player.move()
+        # end = time.time()
+        # print("El tiempo de ejecucion es: " + end-start)
+        # self.times[self.turn_count%self.num_players].append(end-start) 
 
         #debug board 
         print(player.color, "----------------------------------\n")
