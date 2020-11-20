@@ -5,10 +5,11 @@ import Game
 import matplotlib.pyplot as plt
 
 def main():
+
     sys.setrecursionlimit(10**7)
 
-    num_players = 3
-    board_size = 9
+    num_players = 4
+    board_size = 30
     game = Game.Game(num_players, board_size)
 
 

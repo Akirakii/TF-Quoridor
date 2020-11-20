@@ -17,9 +17,9 @@ class Game():
         self.BLACK = (0,0,0)
         self.all_sprite_list = pygame.sprite.Group()
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
-        self.background = pygame.image.load("Quoridor Game/src/assets/board.png")
+        self.background = pygame.image.load("TF-Quoridor/Quoridor Game/src/assets/board.png")
         self.background = pygame.transform.scale(self.background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
-        self.Game_Over_background = pygame.image.load("Quoridor Game/src/assets/gameover.png")
+        self.Game_Over_background = pygame.image.load("TF-Quoridor/Quoridor Game/src/assets/gameover.png")
         self.Game_Over_background = pygame.transform.scale(self.Game_Over_background, (self.SCREEN_WIDTH,self.SCREEN_HEIGHT))
         self.size = size
         self.game_over = False
@@ -30,7 +30,7 @@ class Game():
 
         #player instance
         self.players = []
-        colors = ['Quoridor Game/src/assets/red.png', 'Quoridor Game/src/assets/blue.png', 'Quoridor Game/src/assets/yellow.png', 'Quoridor Game/src/assets/green.png']
+        colors = ['TF-Quoridor/Quoridor Game/src/assets/red.png', 'TF-Quoridor/Quoridor Game/src/assets/blue.png', 'TF-Quoridor/Quoridor Game/src/assets/yellow.png', 'TF-Quoridor/Quoridor Game/src/assets/green.png']
         xpos = [int(size/2), int(size/2), 0, size-1]
         ypos = [0, size-1, int(size/2), int(size/2)]
         for i in range(num_players):
