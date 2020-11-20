@@ -6,8 +6,8 @@ def find_shortest_path(tile, shortest_path, weight_ori=-1):
     
     posible_targets = [] #almacenamos todos los valores minimos repetidos aqui
     
-    minimum = min(i.visited_order for i in tile.neighbours if i.visited)
-    for i in tile.neighbours:
+    minimum = min(i.visited_order for i in tile.neighbors if i.visited)
+    for i in tile.neighbors:
         if i.visited_order == minimum:
             posible_targets.append(i)  # almacenamos todos los valores minimos repetidos
 
@@ -16,11 +16,11 @@ def find_shortest_path(tile, shortest_path, weight_ori=-1):
     else: # si hay elementos repetidos
         neighbors_minimum = []
         for i in posible_targets:
-            neighbor_minimum = min(i.visited_order for i in tile.neighbours if i.visited) # se almacena el minimo de los vecinos del nodo candidato
+            neighbor_minimum = min(i.visited_order for i in tile.neighbors if i.visited) # se almacena el minimo de los vecinos del nodo candidato
             neighbors_minimum.append(neighbor_minimum) 
 
         minimum = min(i for i in neighbors_minimum) # se selcciona el candidato con el minimo de los valores minimos de los vecinos
-        for i in tile.neighbours:
+        for i in tile.neighbors:
             if i.visited_order == minimum:
                 neighbor_target = i
 

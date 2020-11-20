@@ -1,19 +1,19 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    #color: se le asigna un color a cada jugador
+    #name: se le asigna un nombre a cada jugador
     #xpos: se define en que posicion respecto a x esta el jugaodor
     #ypos: se define en que posicion respecto a y esta el jugaodor
     #goal: es la meta del jugador
 
-    def __init__(self, color, xpos, ypos, goal):
-        self.color = color
+    def __init__(self, name, image, xpos, ypos, goal):
+        self.name = name
         self.xpos = xpos
         self.ypos = ypos
         self.goal = goal
         self.route = None
         super().__init__() # se usa para poder imprimir el jugador
-        self.image = pygame.image.load(color).convert() # se le asigna el sprite al jugador
+        self.image = image # se le asigna el sprite al jugador
         self.image.set_colorkey((0, 0, 0)) # se borra el fondo que se produce al moverse
         self.rect = self.image.get_rect() # se le asigna la forma de cuadrado para insertar la imagen
     

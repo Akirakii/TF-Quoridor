@@ -10,7 +10,7 @@ def DFS(tile, goal, visited_order, tile_obstacles):
     for i in goal: #Se recorre el array donde se almcenan las metas de los jugadores
         if i.visited == True: # se verifica si algun nodo dentro de goals ya fue visitado
             return tile
-    for i in tile.neighbours: #se recorren todos los vecinos de tile
+    for i in tile.neighbors: #se recorren todos los vecinos de tile
         #Si el nodo no ha sido visitado y no tiene obstaculos
         if i.visited == False and i not in tile_obstacles: 
             last_tile = DFS(i, goal, visited_order+1, tile_obstacles)# Entonces en ese nodo hacer un nuevo DFS

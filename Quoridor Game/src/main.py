@@ -8,10 +8,9 @@ def main():
 
     sys.setrecursionlimit(10**7)
 
-    num_players = 4
-    board_size = 30
+    num_players = 3
+    board_size = 9
     game = Game.Game(num_players, board_size)
-
 
     done = False
     while not done:
@@ -29,8 +28,6 @@ def main():
         for j in range(len(game.times[i])):
             print(game.times[i][j], end = ",  ")
         print("\n")
-
-
     
     for i in range(len(game.times)):
         turns = []

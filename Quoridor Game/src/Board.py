@@ -1,11 +1,9 @@
 import Tile
 
 class Board():
-    #size: se le asigna el tamaño del tablero
-    #size
     def __init__(self, size):
-
         self.size = size
+
         board = []
         for y in range(size):
             board.append([])
@@ -14,18 +12,24 @@ class Board():
 
         self.board = board
         self.indexing_tiles()
+        self.removing_corner_walls()
 
     def indexing_tiles(self):
         for i in range(self.size):
             for j in range(self.size):
                 if j+1 < self.size:
-                    self.board[i][j].neighbours.append(self.board[i][j+1])
+                    self.board[i][j].neighbors.append(self.board[i][j+1])
                 if j-1 >= 0:
-                    self.board[i][j].neighbours.append(self.board[i][j-1])
+                    self.board[i][j].neighbors.append(self.board[i][j-1])
                 if i-1 >= 0:
-                    self.board[i][j].neighbours.append(self.board[i-1][j])
+                    self.board[i][j].neighbors.append(self.board[i-1][j])
                 if i+1 < self.size:
-                    self.board[i][j].neighbours.append(self.board[i+1][j])
+                    self.board[i][j].neighbors.append(self.board[i+1][j])
+    
+    def removing_corner_walls(self):
+        for i in range(self.size):
+            self.board[self.size-1][i].left_wall = None
+            self.board[i][self.size-1].down_wall = None
 
     def print_visited_tiles(self):
         for i in range(self.size):
@@ -59,13 +63,9 @@ class Board():
                 return False
 
         route[y][x] = False
-        if x+1 < len(route) and route[y][x+1]:
-            is_colliding = self.is_colliding(route, obstacles, [x+1, y], goal)
-        elif x-1 >= 0 and route[y][x-1]:
-            is_colliding = self.is_colliding(route, obstacles, [x-1, y], goal)
-        elif y-1 >= 0 and route[y-1][x]:
-            is_colliding = self.is_colliding(route, obstacles, [x, y-1], goal)
-        elif y+1 < len(route) and route[y+1][x]:
-            is_colliding = self.is_colliding(route, obstacles, [x, y+1], goal)
+        for i in self.board[y][x].neighbors:
+            if route[i.ypos][i.xpos]:
+                is_colliding = self.is_colliding(route, obstacles, [i.xpos, i.ypos], goal)
         route[y][x] = True
+        
         return is_colliding

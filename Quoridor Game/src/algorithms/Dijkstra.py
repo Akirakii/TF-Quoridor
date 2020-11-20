@@ -32,7 +32,7 @@ def dijkstra(board, pos_ori, goal, obstacles):
         if tile in goal: # se verifica si el tile es el destino
             break # si se llego al destino se rompe el bucle
         #Para cada vecino del nodo 
-        for i in tile.neighbours:
+        for i in tile.neighbors:
             
             #si el nodo no esta en la cola
             #y el nodo no ha sido visitado

@@ -3,7 +3,7 @@ import math
 
 class Tile():
     def __init__(self):
-        self.neighbours = []
+        self.neighbors = []
         self.visited = False
         self.visited_order = -1
         self.is_shortest_path = False
@@ -18,13 +18,13 @@ class Board():
         for i in range(len(board)):
             for j in range(len(board[i])):
                 if j+1 < len(board[i]):
-                    board[i][j].neighbours.append(board[i][j+1])
+                    board[i][j].neighbors.append(board[i][j+1])
                 if j-1 >= 0:
-                    board[i][j].neighbours.append(board[i][j-1])
+                    board[i][j].neighbors.append(board[i][j-1])
                 if i-1 >= 0:
-                    board[i][j].neighbours.append(board[i-1][j])
+                    board[i][j].neighbors.append(board[i-1][j])
                 if i+1 < len(board):
-                    board[i][j].neighbours.append(board[i+1][j])
+                    board[i][j].neighbors.append(board[i+1][j])
 
     def print_visited_tiles(self, board):
         for i in range(len(board)):
@@ -70,7 +70,7 @@ def DFS(tile_ori, tile_dest, visited_order):
     tile_ori.visited_order = visited_order
     if tile_dest.visited == True:
         return
-    for i in tile_ori.neighbours: 
+    for i in tile_ori.neighbors: 
         if i.visited == False: 
             DFS(i, tile_dest, visited_order+1)
 
@@ -81,8 +81,8 @@ def find_shortest_path(tile):
     
     posible_targets = []
     
-    minimum = min(i.visited_order for i in tile.neighbours if i.visited)
-    for i in tile.neighbours:
+    minimum = min(i.visited_order for i in tile.neighbors if i.visited)
+    for i in tile.neighbors:
         if i.visited_order == minimum:
             posible_targets.append(i) 
 
@@ -91,11 +91,11 @@ def find_shortest_path(tile):
     else:
         neighbors_minimum = []
         for i in posible_targets:
-            neighbor_minimum = min(i.visited_order for i in tile.neighbours if i.visited)
+            neighbor_minimum = min(i.visited_order for i in tile.neighbors if i.visited)
             neighbors_minimum.append(neighbor_minimum)
 
         minimum = min(i for i in neighbors_minimum)
-        for i in tile.neighbours:
+        for i in tile.neighbors:
             if i.visited_order == minimum:
                 neighbor_target = i
 
