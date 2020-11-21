@@ -30,6 +30,7 @@ class Game():
         self.SCREEN_HEIGHT = int((size)*50)
         self.BLACK = (0, 0, 0)
         self.all_sprite_list = pygame.sprite.Group()
+        self.all_walls_list = []
         self.screen = pygame.display.set_mode(
             [self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
         self.background = pygame.image.load(
@@ -84,6 +85,9 @@ class Game():
                                  (0, y), (self.SCREEN_HEIGHT, y), 2)
             self.print_player()
             self.all_sprite_list.draw(self.screen)
+            print(len(self.all_walls_list))
+            for i in self.all_walls_list:
+                pygame.draw.rect(self.background, (255, 255, 255), i)
             pygame.display.flip()
 
     def game_over_print(self, player):
@@ -107,7 +111,8 @@ class Game():
 
         if pos[0]/50 > round(pos[0]/50, 0) - 0.1 and pos[0]/50 < round(pos[0]/50, 0) + 0.1 and pos[1]/50 > int(pos[1]/50) + 0.05 and pos[1]/50 < int(pos[1]/50) + 0.95:
             print("right_wall colocado en: ", (round(pos[0]/50, 0) - 0.1, int(pos[1]/50) + 0.1), (round(pos[0]/50, 0) + 0.1, int(pos[1]/50) + 0.9))
-            pygame.draw.rect(self.background, (0,0,0), [(round(pos[0]/50, 0) - 0.1, int(pos[1]/50) + 0.1), (round(pos[0]/50, 0) + 0.1, int(pos[1]/50) + 0.9)]) 
+            self.all_walls_list.append((((round(pos[0]/50, 0) - 0.1)*50, (int(pos[1]/50) + 0.1)*50), ((round(pos[0]/50, 0) + 0.1), (int(pos[1]/50) + 0.9)*10)))
+            self.draw_screen()
 
 
         if pos[1]/50 > round(pos[1]/50, 0) - 0.1 and pos[1]/50 < round(pos[1]/50, 0) + 0.1 and pos[0]/50 > int(pos[0]/50) + 0.05 and pos[0]/50 < int(pos[0]/50) + 0.95:
