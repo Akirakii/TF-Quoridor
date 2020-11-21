@@ -22,6 +22,9 @@ def main():
                     done = True
             if event.type == pygame.MOUSEBUTTONDOWN and game.game_over == True:
                 done = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                game.place_walls(pos)
 
     for i in range(len(game.times)):
         print("jugador " + str(i))
