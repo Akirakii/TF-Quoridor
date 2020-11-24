@@ -8,3 +8,4 @@ class Tile():
         self.weight = 1 # es el peso de la cola (usado para el dijkstra)
         self.right_wall = False
         self.down_wall = False  
+        self.cache = [] #almacena las posiciones de los neighbors bloqueados por una pared

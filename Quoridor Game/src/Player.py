@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.ypos = ypos
         self.goal = goal
         self.route = None
+        self.route_lenght = 0
         super().__init__() # se usa para poder imprimir el jugador
         self.image = image # se le asigna el sprite al jugador
         self.image.set_colorkey((0, 0, 0)) # se borra el fondo que se produce al moverse

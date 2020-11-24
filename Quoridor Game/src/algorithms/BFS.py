@@ -21,6 +21,9 @@ def BFS(board, pos_ori, goal, obstacles):
     
     #Visita cada nodo hasta encontrar el destino
     while True:
+        if queque == []:
+            return None
+
         tile = queque.pop(0)# saca un nodo de la cola y lo asigna a la variable tile
         tile.visited = True #se marca como visitado los nodos que van siendo llamados
         tile.visited_order = order #se le asigna el orden de visita al nodo
@@ -34,10 +37,11 @@ def BFS(board, pos_ori, goal, obstacles):
             #si el nodo no esta en la cola
             #y el nodo no ha sido visitado
             #y el nodo no es un obstaculo
-            if queque.count(i) == 0 and i.visited == False and i not in tile_obstacles: 
+            if i is not None and queque.count(i) == 0 and i.visited == False and i not in tile_obstacles: 
                 queque.append(i)#se agregan los vecinos del nodo a la cola 
     
     #Creamos una matrix con el tamaño del tablero para que nos represente el camino que va a tomar el jugador
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))] #lo rellenamos de False por cada nodo
+    shortest_path.append(0) #colocamos en la ultima fila la distancia del camino
     FSP.find_shortest_path(tile, shortest_path) #nos retorna la matriz con el camino en True
     return shortest_path #regresanis el camino que tomara el jugador

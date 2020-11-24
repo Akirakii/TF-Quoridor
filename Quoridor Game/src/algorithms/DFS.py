@@ -12,7 +12,7 @@ def DFS(tile, goal, visited_order, tile_obstacles):
             return tile
     for i in tile.neighbors: #se recorren todos los vecinos de tile
         #Si el nodo no ha sido visitado y no tiene obstaculos
-        if i.visited == False and i not in tile_obstacles: 
+        if i is not None and i.visited == False and i not in tile_obstacles: 
             last_tile = DFS(i, goal, visited_order+1, tile_obstacles)# Entonces en ese nodo hacer un nuevo DFS
             if last_tile is not None:
                 return last_tile
@@ -34,5 +34,6 @@ def call_DFS(board, pos_ori, goal, obstacles):
     
     last_tile = DFS(tile_ori, goal, 0, tile_obstacles)
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))]
+    shortest_path.append(0) #colocamos en la ultima fila la distancia del camino
     FSP.find_shortest_path(last_tile, shortest_path)
     return shortest_path

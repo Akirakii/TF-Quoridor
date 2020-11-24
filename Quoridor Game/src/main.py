@@ -9,7 +9,7 @@ def main():
     sys.setrecursionlimit(10**7)
 
     num_players = 3
-    board_size = 9
+    board_size = 15
     game = Game.Game(num_players, board_size)
 
     done = False
@@ -24,7 +24,7 @@ def main():
                 done = True
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                game.place_walls(pos)
+                game.place_walls_click(pos)
 
     for i in range(len(game.times)):
         print("jugador " + str(i))
