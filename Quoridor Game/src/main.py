@@ -8,8 +8,9 @@ def main():
 
     sys.setrecursionlimit(10**7)
 
-    num_players = 3
-    board_size = 21
+    num_players = 3 # VALORES EDITABLES
+    board_size = 21 # VALORES EDITABLES
+    
     game = Game.Game(num_players, board_size)
     end_game = False
     done = False
@@ -18,7 +19,7 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN and game.game_over == False:
-                while game.game_over == False:
+                while game.game_over == False: # COMENTAR ESTO PARA QUE NO CORRTA EL JUEGO AUTOMATICAMENTE
                     if game.next_turn():
                         done = True
             if event.type == pygame.MOUSEBUTTONDOWN and game.game_over == True:
@@ -46,7 +47,7 @@ def main():
     plt.xlabel('turns')
     plt.ylabel('time in sec')
     plt.title(f'time test with {board_size}*{board_size}')
-    plt.legend(['Dijkstra','DFS','BFS'])
+    plt.legend(['DFS','BFS','Dijkstra'])
     plt.show()
 
     pygame.quit()

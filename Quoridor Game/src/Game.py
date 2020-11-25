@@ -194,13 +194,13 @@ class Game():
         if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, [player.xpos, player.ypos], player.goal):
             start = time.time()
             if player_num == 0:  # "red" El primer jugador ejecuta DFS 
-                player.route = Dijkstra.dijkstra(
-                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if player_num == 1:  # "blue" El segundo jugador ejecuta BFS
                 player.route = DFS.call_DFS(
                     board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if player_num == 2:  # "yellow" El tercer jugador ejecuta Dijkstra
+            if player_num == 1:  # "blue" El segundo jugador ejecuta BFS
                 player.route = BFS.BFS(
+                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
+            if player_num == 2:  # "yellow" El tercer jugador ejecuta Dijkstra
+                player.route = Dijkstra.dijkstra(
                     board_util, [player.ypos, player.xpos], player.goal, obstacles)
             if player_num == 3:  # "green" El cuarto jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(
