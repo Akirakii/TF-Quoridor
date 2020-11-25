@@ -1,16 +1,10 @@
 import algorithms.Find_shortest_path as FSP
 
 
-def dijkstra(board, pos_ori, goal, obstacles):
+def dijkstra(board, pos_ori, goal):
     # board: es la matriz en donde se ubican todos los nodos que representan el tablero
     # pos_ori: Posición inicial del jugador o IA. array de posicion [x, y]
     # goal: Meta para el jugador o IA
-    # obstacles: es una array que guarda a los otros jugadores 
-
-    # tile obstacles: aqui guardamos los nodos de los obstaculos
-    tile_obstacles = [] # se crea un array para guardar los obstaculos
-    for i in obstacles: 
-        tile_obstacles.append(board[i.ypos][i.xpos]) #se van guardando los nodos de cada obstaculos
 
     tile = board[pos_ori[0]][pos_ori[1]] #tile: es un iterador que va pasando entre los nodos
     queue = [] # se usa para almacenar los vecinos de cada nodo 
@@ -23,6 +17,9 @@ def dijkstra(board, pos_ori, goal, obstacles):
     
     #Visita cada nodo hasta encontrar el destino
     while True:
+        if queue == []:
+            return None
+
         tile.visited = True
         tile = queue.pop(0)# saca un nodo de la cola y lo asigna a la variable tile
         last_weight = queue_last_weight.pop(0) #obtenemos el peso del nodo anterior
@@ -36,8 +33,7 @@ def dijkstra(board, pos_ori, goal, obstacles):
             
             #si el nodo no esta en la cola
             #y el nodo no ha sido visitado
-            #y el nodo no es un obstaculo
-            if i is not None and queue.count(i) == 0 and i.visited == False and i not in tile_obstacles: 
+            if i is not None and queue.count(i) == 0 and i.visited == False: 
                 queue.append(i)#se agregan los vecinos del nodo a la cola 
                 queue_last_weight.append(tile.weight) #se le agrega el peso del nodo para el siguiente nodo
     

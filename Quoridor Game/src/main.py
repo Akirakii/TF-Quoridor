@@ -11,7 +11,7 @@ def main():
     num_players = 3
     board_size = 15
     game = Game.Game(num_players, board_size)
-
+    end_game = False
     done = False
     while not done:
         for event in pygame.event.get():

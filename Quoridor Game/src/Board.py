@@ -16,7 +16,6 @@ class Board():
         self.indexing_tiles()
         self.removing_corner_walls()
 
-
     def indexing_tiles(self):
         for i in range(self.size):
             for j in range(self.size):
@@ -37,12 +36,10 @@ class Board():
                 else:
                     self.board[i][j].neighbors.append(None)
 
-
     def removing_corner_walls(self):
         for i in range(self.size):
             self.board[self.size-1][i].righht_wall = None
             self.board[i][self.size-1].down_wall = None
-
 
     def print_visited_tiles(self):
         for i in range(self.size):
@@ -51,13 +48,11 @@ class Board():
                 print(v, end=",  " if v in range(0, 9) else ", ")
             print("\n")
 
-
     def print_path(self, route):
         for i in range(self.size):
             for j in range(self.size):
                 print(1 if route[i][j] else 0, end=",  ")
             print("\n")
-
 
     def reset_tiles(self):
         for i in range(self.size):
@@ -65,7 +60,6 @@ class Board():
                 self.board[i][j].visited = False
                 self.board[i][j].visited_order = -1
                 self.board[i][j].weight = 1
-    
 
     def place_right_wall(self, pos):
         tile = self.board[pos[1]][pos[0]]
@@ -80,7 +74,6 @@ class Board():
         tile.neighbors[0].neighbors.insert(1, None)
         del tile.neighbors[0]
         tile.neighbors.insert(0, None)
-        
 
     def place_down_wall(self, pos):
         tile = self.board[pos[1]][pos[0]]
@@ -96,61 +89,57 @@ class Board():
         del tile.neighbors[3]
         tile.neighbors.insert(3, None)
 
-
     def place_walls_AI(self, player, pos):
         x, y = pos[0], pos[1]
         route = player.route
-
-        for i, neighbor in enumerate(self.board[y][x].neighbors):
+        tile = self.board[y][x]
+        route[y][x] = False
+        wall_pos = None
+        for i, neighbor in enumerate(tile.neighbors):
             if neighbor is not None and route[neighbor.ypos][neighbor.xpos]:
-                if [False, neighbor.xpos, neighbor.ypos] not in self.prohibited_walls or [True, neighbor.xpos, neighbor.ypos] not in self.prohibited_walls:
-                    if i == 0:
-                        self.place_right_wall([x,y])
-                        return [False,x,y]
-                    elif i == 1:
-                        self.place_right_wall([neighbor.xpos,neighbor.ypos])
-                        return [False,neighbor.xpos,neighbor.ypos]
-                    elif i == 2:
-                        self.place_down_wall([neighbor.xpos,neighbor.ypos])
-                        return [True,neighbor.xpos,neighbor.ypos]
-                    elif i == 3:
-                        self.place_down_wall([x,y])
-                        return [True,x,y]
+                if i == 0 and [False, x, y] not in self.prohibited_walls:
+                    self.place_right_wall([x, y])
+                    wall_pos = [False, x, y]
+                elif i == 1 and [False, neighbor.xpos, neighbor.ypos] not in self.prohibited_walls:
+                    self.place_right_wall([neighbor.xpos, neighbor.ypos])
+                    wall_pos = [False, neighbor.xpos, neighbor.ypos]
+                elif i == 2 and [True, neighbor.xpos, neighbor.ypos] not in self.prohibited_walls:
+                    self.place_down_wall([neighbor.xpos, neighbor.ypos])
+                    wall_pos = [True, neighbor.xpos, neighbor.ypos]
+                elif i == 3 and [True, x, y] not in self.prohibited_walls:
+                    self.place_down_wall([x, y])
+                    wall_pos = [True, x, y]
                 else:
-                    self.place_walls_AI(self, player, [neighbor.xpos, neighbor.ypos])
-            
-            
+                    wall_pos = self.place_walls_AI(player, [neighbor.xpos, neighbor.ypos])
+        route[y][x] = True
+        return wall_pos
+
     def rollback_last_wall(self, wall_pos):
         if wall_pos[0] == False:
             tile = self.board[wall_pos[2]][wall_pos[1]]
-            print("right_wall removido en: ", [wall_pos[1],wall_pos[2]])
+            print("right_wall removido en: ", [wall_pos[1], wall_pos[2]])
 
             tile.right_wall = False
             tile.cache.pop()
+            del tile.neighbors[0]
+            tile.neighbors.insert(0, self.board[tile.ypos][tile.xpos+1])
             tile.neighbors[0].cache.pop()
             del tile.neighbors[0].neighbors[1]
             tile.neighbors[0].neighbors.insert(1, tile)
-            del tile.neighbors[0]
-            tile.neighbors.insert(0, self.board[tile.ypos][tile.xpos+1])
         else:
             tile = self.board[wall_pos[2]][wall_pos[1]]
-            print("down_wall removido en: ", [wall_pos[1],wall_pos[2]])
+            print("down_wall removido en: ", [wall_pos[1], wall_pos[2]])
 
             tile.down_wall = False
             tile.cache.pop()
-            tile.neighbors[3].cache.pop()
-            del tile.neighbors[3].neighbors[4]
-            tile.neighbors[3].neighbors.insert(4, tile)
             del tile.neighbors[3]
             tile.neighbors.insert(3, self.board[tile.ypos+1][tile.xpos])
+            tile.neighbors[3].cache.pop()
+            del tile.neighbors[3].neighbors[2]
+            tile.neighbors[3].neighbors.insert(2, tile)
 
-
-    def is_colliding(self, route, obstacles, pos, goal):
+    def is_colliding(self, route, pos, goal):
         x, y = pos[0], pos[1]
-
-        for i in obstacles:
-            if i.xpos == x and i.ypos == y:
-                return True
 
         for i in goal:
             if i.xpos == x and i.ypos == y:
@@ -164,7 +153,7 @@ class Board():
         for neighbor in self.board[y][x].neighbors:
             if neighbor is not None and route[neighbor.ypos][neighbor.xpos]:
                 is_colliding = self.is_colliding(
-                    route, obstacles, [neighbor.xpos, neighbor.ypos], goal)
+                    route, [neighbor.xpos, neighbor.ypos], goal)
 
         route[y][x] = True
 

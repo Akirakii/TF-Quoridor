@@ -18,20 +18,23 @@ class Player(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0)) # se borra el fondo que se produce al moverse
         self.rect = self.image.get_rect() # se le asigna la forma de cuadrado para insertar la imagen
     
-    def move(self): # se encarga de mover al jugador
+    def move(self, board, obstacles): # se encarga de mover al jugador
         # se le pone el valor de falso a la ruta antes de moverse
         self.route[self.ypos][self.xpos] = False 
         # se verifica a que posicion se va a mover el jugador
-        if self.xpos+1 < len(self.route) and self.route[self.ypos][self.xpos+1]: 
+        if self.xpos+1 < len(self.route) and self.route[self.ypos][self.xpos+1] and board[self.ypos][self.xpos].right_wall == False: 
             self.xpos += 1 
-        elif self.xpos-1 >= 0 and self.route[self.ypos][self.xpos-1]:
-            self.xpos -= 1
-        elif self.ypos-1 >= 0 and self.route[self.ypos-1][self.xpos]:
+        elif self.xpos-1 >= 0 and self.route[self.ypos][self.xpos-1] and board[self.ypos][self.xpos-1].right_wall == False: 
+            self.xpos -= 1 
+        elif self.ypos-1 >= 0 and self.route[self.ypos-1][self.xpos] and board[self.ypos-1][self.xpos].down_wall == False:
             self.ypos -= 1 
-        elif self.ypos+1 < len(self.route) and self.route[self.ypos+1][self.xpos]:
+        elif self.ypos+1 < len(self.route) and self.route[self.ypos+1][self.xpos] and board[self.ypos][self.xpos].down_wall == False:
             self.ypos += 1 
 
         self.route[self.ypos][self.xpos] = False # se le asigna falso a la ruta despues de moverse
+
+        if board[self.ypos][self.xpos] in obstacles:
+            self.move(board, obstacles)
 
         for i in self.goal: # se recorre los destinos de los jugadores
             if self.ypos == i.ypos and self.xpos == i.xpos:# se verifica si  el jugador esta en el la meta

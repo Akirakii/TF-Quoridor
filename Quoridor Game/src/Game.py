@@ -6,6 +6,7 @@ import algorithms.DFS as DFS
 import algorithms.BFS as BFS
 import algorithms.Dijkstra as Dijkstra
 import time
+from termcolor import colored
 
 
 class Game():
@@ -17,6 +18,7 @@ class Game():
         self.game_over = False
         self.players = []
         self.times = []
+        self.players_target = []
         for i in range(num_players):
             self.times.append([])
 
@@ -52,6 +54,7 @@ class Game():
             goal = self.get_goal(i)
             self.players.append(Player.Player(
                 names[i], images[i], xpos[i], ypos[i], goal))
+            self.players_target.append(self.players[-1])
             self.all_sprite_list = pygame.sprite.Group()
 
         # first draw_screen:
@@ -74,6 +77,7 @@ class Game():
                 goal.append(board_util[j][0])
         return goal
 
+
     def draw_screen(self):
         if self.game_over == False:
             self.screen.blit(self.background, [0, 0])
@@ -90,6 +94,7 @@ class Game():
                 pygame.draw.rect(self.background, (255, 255, 255), i)
             pygame.display.flip()
 
+
     def game_over_print(self, player):
         self.screen.blit(self.Game_Over_background, [0, 0])
         font = pygame.font.SysFont("serif", 25)
@@ -99,11 +104,13 @@ class Game():
                                 self.SCREEN_HEIGHT-(self.SCREEN_HEIGHT/5)))
         pygame.display.flip()
 
+
     def print_player(self):
         for i in range(len(self.players)):
             self.players[i].rect.x = (self.players[i].xpos)*50
             self.players[i].rect.y = (self.players[i].ypos)*50
             self.all_sprite_list.add(self.players[i])
+
 
     def place_walls_click(self, pos):
         if pos[0]/50 < 0.1 or pos[0]/50 > self.size - 0.1 or pos[1]/50 < 0.1 or pos[1]/50 > self.size - 0.1:
@@ -122,6 +129,7 @@ class Game():
             
             self.game_board.place_down_wall([int(pos[0]/50), int(round(pos[1]/50,0))-1])
 
+
     def draw_wall(self, pos):
         if pos[0] == False:
             pygame.draw.rect(self.background, (0,0,0), [((pos[1]+1 - 0.05)*50, pos[2]*50), (0.1*50, 50)]) 
@@ -134,34 +142,66 @@ class Game():
             self.draw_screen()
 
 
-    def get_player_by_minimum_rout(self, player):
+    def get_player_target_by_minimum_rout(self):
+        minimum = 10000000000
+        for i in self.players_target:
+            if i.route_lenght < minimum:
+                minimum = i.route_lenght
+        for i in self.players_target:
+            if i.route_lenght == minimum:
+                return i
+
+
+    def get_player_by_minimum_rout(self):
         minimum = 10000000000
         for i in self.players:
-            if i != player and i.route_lenght < minimum:
+            if i.route_lenght < minimum:
                 minimum = i.route_lenght
         for i in self.players:
             if i.route_lenght == minimum:
                 return i
 
 
-    def execute_search_algorithms(self, player_num, obstacles):
+    def place_walls(self, player):
+        if self.players_target == []:
+            return
+        wall_pos = self.game_board.place_walls_AI(player, [player.xpos, player.ypos]) #si no, colocara una pared en el jugador con el camino mas corto
+        if wall_pos is None:
+            self.players_target.remove(player)
+            new_player = self.get_player_target_by_minimum_rout()
+            return self.place_walls(new_player)
+        routes_aux = []
+        for i in range(self.num_players): #se va a recalcular el camino de todos despues de colocar la pared
+            self.game_board.reset_tiles()
+            routes_aux.append(self.players[i].route)
+            if self.execute_search_algorithms(i): #si la pared bloquea el camino de un jugador, se eliminara la pared y saldra del bucle
+                for j in range(i+1):
+                    self.players[i].route = routes_aux.pop(0)
+                self.game_board.prohibited_walls.append(wall_pos)
+                self.game_board.rollback_last_wall(wall_pos)
+                return self.place_walls(player)
+        self.draw_wall(wall_pos)
+
+
+    def execute_search_algorithms(self, player_num):
         board_util = self.game_board.board
         player = self.players[player_num]
+
         # Ejecutamos los algoritmos de busqueda cada vez que se detecta una colision o en el primer turno del jugador.
         # Los algoritmos de busqueda nos retorna la matriz con el camino de la solucion
-        if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, obstacles, [player.xpos, player.ypos], player.goal):
-            if player_num == 0:  # El primer jugador ejecuta DFS
+        if self.turn_count < self.num_players or self.game_board.is_colliding(player.route, [player.xpos, player.ypos], player.goal):
+            if player_num == 0:  # "red" El primer jugador ejecuta DFS 
                 player.route = DFS.call_DFS(
-                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if player_num == 1:  # El segundo jugador ejecuta BFS
+                    board_util, [player.ypos, player.xpos], player.goal)
+            if player_num == 1:  # "blue" El segundo jugador ejecuta BFS
                 player.route = BFS.BFS(
-                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if player_num == 2:  # El tercer jugador ejecuta Dijkstra
+                    board_util, [player.ypos, player.xpos], player.goal)
+            if player_num == 2:  # "yellow" El tercer jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(
-                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
-            if player_num == 3:  # El cuarto jugador ejecuta Dijkstra
+                    board_util, [player.ypos, player.xpos], player.goal)
+            if player_num == 3:  # "green" El cuarto jugador ejecuta Dijkstra
                 player.route = Dijkstra.dijkstra(
-                    board_util, [player.ypos, player.xpos], player.goal, obstacles)
+                    board_util, [player.ypos, player.xpos], player.goal)
             
             if player.route is None: # si no encuentra un camino, eliminara la ultima pared
                 return True
@@ -169,52 +209,42 @@ class Game():
             player.route_lenght = player.route[len(player.route)-1] #se asigna la distancia de la ruta del jugador a su variable
             del player.route[len(player.route)-1] #se elimina el valor distancia de la matriz ruta
             print("\n\n///////////////////////////////////")
-            self.game_board.print_visited_tiles()
+            print(player.name)
+            #self.game_board.print_path(player.route)
+            #self.game_board.print_visited_tiles()
 
             return False # si encuentra un camino, no eliminara la ultima pared
-      
-
-
-    def place_walls(self, minimum_player, obstacles):
-        wall_pos = self.game_board.place_walls_AI(minimum_player, [minimum_player.xpos, minimum_player.ypos]) #si no, colocara una pared en el jugador con el camino mas corto
-        for i in range(self.num_players): #se va a recalcular el camino de todos despues de colocar la pared
-            print(self.players[i].name, "----------------------------------\n")
-            self.game_board.print_path(self.players[i].route)
-            self.game_board.reset_tiles()
-            self.draw_screen()
-            if self.execute_search_algorithms(i, obstacles): #si la pared bloquea el camino de un jugador, se eliminara la pared y saldra del bucle
-                self.game_board.prohibited_walls.append(wall_pos)
-                self.game_board.rollback_last_wall(wall_pos)
-                return self.place_walls(minimum_player, obstacles)
-        self.draw_wall(wall_pos)
 
 
     def next_turn(self):
-        board_util = self.game_board.board
         player = self.players[self.turn_count % self.num_players]
+        print(colored(f"{self.turn_count} {player.name}", 'red'))
 
         obstacles = []
         # each player is an obstacle
         for i in self.players:
             if i != player:
-                obstacles.append(i)
+                obstacles.append(self.game_board.board[i.ypos][i.xpos])
 
         start = time.time()
 
-        self.execute_search_algorithms(self.turn_count % self.num_players, obstacles)
+        self.execute_search_algorithms(self.turn_count % self.num_players)
 
-        minimum_player = self.get_player_by_minimum_rout(player)
-        if player == minimum_player or self.turn_count < self.num_players: #si la ruta del jugador es la mas corta a comparacion de otros jugadores:
-            self.game_over = player.move() #el jugador se movera por la matriz solucion y retornara True si llega a la meta
+        if self.players_target != []:
+            minimum_player = self.get_player_by_minimum_rout()
+            if player == minimum_player or self.turn_count < self.num_players: #si la ruta del jugador es la mas corta a comparacion de otros jugadores:
+                self.game_over = player.move(self.game_board.board, obstacles) #el jugador se movera por la matriz solucion y retornara True si llega a la meta
+            else:
+                self.place_walls(self.get_player_target_by_minimum_rout())
         else:
-            self.place_walls(minimum_player, obstacles)
+            self.game_over = player.move(self.game_board.board, obstacles)
 
         end = time.time()
         print("El tiempo de ejecucion es: " + str(end-start))
         self.times[self.turn_count % self.num_players].append(end-start)
 
         print(player.name, "----------------------------------\n")
-        self.game_board.print_path(player.route)
+        #self.game_board.print_path(player.route)
         self.game_board.reset_tiles()
         self.draw_screen()
 
