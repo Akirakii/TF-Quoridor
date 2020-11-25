@@ -227,6 +227,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+############
+    def MovData(self):
+        
+        if self.flag == 'r':
+            return
+        filename = self.filename
+        tempname = filename + '.tmp'
+#################     Capturar data   
+        fileobj = open(tempname, 'wb' if self.format == 'pickle' else 'w')
+        try:
+            self.dump(fileobj)
+        except Exception:
+            os.remove(tempname)
+            raise
+        finally:
+            fileobj.close()
+          
+##################      actualizar data      
+        shutil.move(tempname, self.filename)    # atomic commit
+        if self.mode is not None:
+            os.chmod(self.filename, self.mode)
 
 # DFS -- Akira
 
