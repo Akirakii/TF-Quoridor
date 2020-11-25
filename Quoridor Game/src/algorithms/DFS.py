@@ -16,13 +16,11 @@ def DFS(tile, goal, visited_order):
                 return last_tile
     return None
 
-def call_DFS(board, pos_ori, goal):
+def call_DFS(board, pos_ori, goal, obstacles):
     # board: es la matriz en donde se ubican todos los nodos que representan el tablero
     # pos_ori: Posición inicial del jugador o IA. array de posicion [x, y]
     # goal: Meta para el jugador o IA
     tile_ori = board[pos_ori[0]][pos_ori[1]] #inicia al jugador en la posicion [0][1]
-    
-    tile_obstacles = []
     
     last_tile = DFS(tile_ori, goal, 0)
     if last_tile is None:
@@ -30,5 +28,5 @@ def call_DFS(board, pos_ori, goal):
 
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))]
     shortest_path.append(0) #colocamos en la ultima fila la distancia del camino
-    FSP.find_shortest_path(last_tile, shortest_path)
+    FSP.find_shortest_path(last_tile, shortest_path, obstacles)
     return shortest_path

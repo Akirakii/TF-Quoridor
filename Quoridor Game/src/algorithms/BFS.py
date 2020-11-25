@@ -1,10 +1,11 @@
 import algorithms.Find_shortest_path as FSP
 
 
-def BFS(board, pos_ori, goal):
+def BFS(board, pos_ori, goal, obstacles):
     # board: es la matriz en donde se ubican todos los nodos que representan el tablero
     # pos_ori: Posición inicial del jugador o IA. array de posicion [x, y]
     # goal: Meta para el jugador o IA
+    
     tile = board[pos_ori[0]][pos_ori[1]] #tile: es un iterador que va pasando entre los nodos
     queque = [] # queue: se usa para almacenar los vecinos de cada nodo 
     order = 0 # order: inicializamos el orden de visita
@@ -35,5 +36,5 @@ def BFS(board, pos_ori, goal):
     #Creamos una matrix con el tamaño del tablero para que nos represente el camino que va a tomar el jugador
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))] #lo rellenamos de False por cada nodo
     shortest_path.append(0) #colocamos en la ultima fila la distancia del camino
-    FSP.find_shortest_path(tile, shortest_path) #nos retorna la matriz con el camino en True
+    FSP.find_shortest_path(tile, shortest_path, obstacles) #nos retorna la matriz con el camino en True
     return shortest_path #regresanis el camino que tomara el jugador

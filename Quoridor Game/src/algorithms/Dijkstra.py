@@ -1,7 +1,6 @@
 import algorithms.Find_shortest_path as FSP
 
-
-def dijkstra(board, pos_ori, goal):
+def dijkstra(board, pos_ori, goal, obstacles):
     # board: es la matriz en donde se ubican todos los nodos que representan el tablero
     # pos_ori: Posición inicial del jugador o IA. array de posicion [x, y]
     # goal: Meta para el jugador o IA
@@ -37,8 +36,9 @@ def dijkstra(board, pos_ori, goal):
                 queue.append(i)#se agregan los vecinos del nodo a la cola 
                 queue_last_weight.append(tile.weight) #se le agrega el peso del nodo para el siguiente nodo
     
+
     #Creamos una matrix con el tamaño del tablero para que nos represente el camino que va a tomar el jugador
     shortest_path = [[False for i in range(len(board))] for j in range(len(board))] #lo rellenamos de False por cada nodo
     shortest_path.append(0) #colocamos en la ultima fila la distancia del camino
-    FSP.find_shortest_path(tile, shortest_path, weight_ori) #nos retorna la matriz con el camino en True
+    FSP.find_shortest_path(tile, shortest_path, obstacles, weight_ori) #nos retorna la matriz con el camino en True
     return shortest_path #regresanis el camino que tomara el jugadorqueue_last_weight.pop(0)

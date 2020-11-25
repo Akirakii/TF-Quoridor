@@ -9,7 +9,7 @@ def main():
     sys.setrecursionlimit(10**7)
 
     num_players = 3
-    board_size = 15
+    board_size = 21
     game = Game.Game(num_players, board_size)
     end_game = False
     done = False
@@ -18,19 +18,24 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN and game.game_over == False:
-                if game.next_turn():
-                    done = True
+                while game.game_over == False:
+                    if game.next_turn():
+                        done = True
             if event.type == pygame.MOUSEBUTTONDOWN and game.game_over == True:
                 done = True
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 game.place_walls_click(pos)
 
-    for i in range(len(game.times)):
-        print("jugador " + str(i))
-        for j in range(len(game.times[i])):
-            print(game.times[i][j], end = ",  ")
-        print("\n")
+
+    # for i in range(len(game.times)):
+    #     print("jugador " + str(i))
+    #     for j in range(len(game.times[i])):
+    #         print(game.times[i][j], end = ",  ")
+    #     print("\n")
+    
+    print(len(game.times))
+    print(len(game.times[0]))
     
     for i in range(len(game.times)):
         turns = []
@@ -40,8 +45,8 @@ def main():
 
     plt.xlabel('turns')
     plt.ylabel('time in sec')
-    plt.title('time test')
-    plt.legend(['DFS','BFS','Dijkstra'])
+    plt.title(f'time test with {board_size}*{board_size}')
+    plt.legend(['Dijkstra','DFS','BFS'])
     plt.show()
 
     pygame.quit()

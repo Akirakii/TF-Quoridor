@@ -1,5 +1,5 @@
 import Tile
-
+from termcolor import colored
 
 class Board():
     def __init__(self, size):
@@ -66,7 +66,7 @@ class Board():
         if tile.right_wall == True:
             return
 
-        print("right_wall colocado en: ", pos)
+        print(colored(f"right_wall colocado en: {pos}", 'red'))
         tile.right_wall = True
         tile.cache.append([tile.neighbors[0].xpos, tile.neighbors[0].ypos])
         tile.neighbors[0].cache.append([tile.xpos, tile.ypos])
@@ -80,7 +80,7 @@ class Board():
         if tile.down_wall == True:
             return
 
-        print("down_wall colocado en: ", pos)
+        print(colored(f"down_wall colocado en: {pos}", 'red'))
         tile.down_wall = True
         tile.cache.append([tile.neighbors[3].xpos, tile.neighbors[3].ypos])
         tile.neighbors[3].cache.append([tile.xpos, tile.ypos])
@@ -117,7 +117,7 @@ class Board():
     def rollback_last_wall(self, wall_pos):
         if wall_pos[0] == False:
             tile = self.board[wall_pos[2]][wall_pos[1]]
-            print("right_wall removido en: ", [wall_pos[1], wall_pos[2]])
+            print(colored(f"right_wall removido en:  {[wall_pos[1], wall_pos[2]]}", 'red'))
 
             tile.right_wall = False
             tile.cache.pop()
@@ -128,7 +128,7 @@ class Board():
             tile.neighbors[0].neighbors.insert(1, tile)
         else:
             tile = self.board[wall_pos[2]][wall_pos[1]]
-            print("down_wall removido en: ", [wall_pos[1], wall_pos[2]])
+            print(colored(f"down_wall removido en:  {[wall_pos[1], wall_pos[2]]}", 'red'))
 
             tile.down_wall = False
             tile.cache.pop()
